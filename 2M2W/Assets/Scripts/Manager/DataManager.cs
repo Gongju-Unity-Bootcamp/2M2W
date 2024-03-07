@@ -8,6 +8,8 @@ using System;
 
 public class DataManager
 {
+    public Dictionary<StoryboardID, StoryboardData> Storyboard { get; set; }
+
     public void Init()
     {
 #if UNITY_EDITOR
