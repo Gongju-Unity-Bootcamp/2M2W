@@ -108,12 +108,16 @@ public class GoalManager : MonoBehaviour
 
     [Tooltip("Object Spawner used to detect whether the spawning goal has been achieved.")]
     [SerializeField]
+#pragma warning disable CS0436 // 형식이 가져온 형식과 충돌합니다.
     ObjectSpawner m_ObjectSpawner;
+#pragma warning restore CS0436 // 형식이 가져온 형식과 충돌합니다.
 
     /// <summary>
     /// Object Spawner used to detect whether the spawning goal has been achieved.
     /// </summary>
+#pragma warning disable CS0436 // 형식이 가져온 형식과 충돌합니다.
     public ObjectSpawner objectSpawner
+#pragma warning restore CS0436 // 형식이 가져온 형식과 충돌합니다.
     {
         get => m_ObjectSpawner;
         set => m_ObjectSpawner = value;

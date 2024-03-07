@@ -82,12 +82,16 @@ public class ARTemplateMenuManager : MonoBehaviour
 
     [SerializeField]
     [Tooltip("The object spawner component in charge of spawning new objects.")]
+#pragma warning disable CS0436 // 형식이 가져온 형식과 충돌합니다.
     ObjectSpawner m_ObjectSpawner;
+#pragma warning restore CS0436 // 형식이 가져온 형식과 충돌합니다.
 
     /// <summary>
     /// The object spawner component in charge of spawning new objects.
     /// </summary>
+#pragma warning disable CS0436 // 형식이 가져온 형식과 충돌합니다.
     public ObjectSpawner objectSpawner
+#pragma warning restore CS0436 // 형식이 가져온 형식과 충돌합니다.
     {
         get => m_ObjectSpawner;
         set => m_ObjectSpawner = value;
