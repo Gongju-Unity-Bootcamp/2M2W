@@ -1,33 +1,101 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Canvas))]
 public class UIManager
 {
+    private static readonly Vector3 DEFAULT_SCALE = Vector3.one;
+    private int currentCanvasOrder = -20;
+    private Stack<UIPopup> popupStack;
+    private GameObject UIRoot;
+
     public void Init()
     {
-        
+        popupStack = new Stack<UIPopup>();
+        UIRoot = new GameObject(nameof(UIRoot));
     }
 
-    private List<T> ParseToList<T>([NotNull] string path)
+    public void SetCanvas(GameObject gameObject, bool sort = true)
     {
-        using StreamReader reader = new StreamReader(path);
-        using CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        Canvas canvas = gameObject.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.overrideSorting = true;
 
-        return csv.GetRecords<T>().ToList();
+        if (true == sort)
+        {
+            canvas.sortingOrder = currentCanvasOrder;
+            currentCanvasOrder += 1;
+        }
+        else
+        {
+            canvas.sortingOrder = 0;
+        }
     }
 
-    /// <summary>
-    /// 딕셔너리로 읽어들인 .csv 데이터 파일을 파싱하여 반환하는 메소드입니다.
-    /// </summary>
-    /// <typeparam name="Key"></typeparam>
-    /// <typeparam name="Item"></typeparam>
-    /// <param name="path">데이터 파일 경로</param>
-    /// <param name="keySelector">키 선택</param>
-    private Dictionary<Key, Item> ParseToDictionary<Key, Item>([NotNull] string path, Func<Item, Key> keySelector)
+    public T OpenPopup<T>(Transform parent = null) where T : UIPopup
     {
-        using StreamReader reader = new StreamReader(path);
-        using CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        T popup = SetupUI<T>(parent);
 
-        return csv.GetRecords<Item>().ToDictionary(keySelector);
+        popupStack.Push(popup);
+
+        return popup;
+    }
+
+    public T OpenSubItem<T>(Transform parent = null) where T : UISubItem
+        => SetupUI<T>(parent);
+
+    private T SetupUI<T>(Transform parent = null) where T : UIBase
+    {
+        GameObject prefab = Managers.Resource.LoadPrefab(typeof(T).Name);
+        GameObject gameObject = Managers.Resource.Instantiate(prefab);
+
+        if (parent != null)
+        {
+            gameObject.transform.SetParent(parent);
+        }
+        else
+        {
+            gameObject.transform.SetParent(UIRoot.transform);
+        }
+
+        gameObject.transform.localScale = DEFAULT_SCALE;
+        gameObject.transform.localPosition = prefab.transform.position;
+
+        return gameObject.GetComponent<T>();
+    }
+
+    public void ClosePopupUI(UIPopup popup)
+    {
+        if (popupStack.Count == 0)
+        {
+            return;
+        }
+
+        if (popupStack.Peek() != popup)
+        {
+            return;
+        }
+
+        ClosePopupUI();
+    }
+
+    public void ClosePopupUI()
+    {
+        if (popupStack.Count == 0)
+        {
+            return;
+        }
+
+        UIPopup popup = popupStack.Pop();
+        Managers.Resource.Destroy(popup.gameObject);
+        currentCanvasOrder -= 1;
+    }
+
+    public void CloseAllPopupUI()
+    {
+        while (popupStack.Count > 0)
+        {
+            ClosePopupUI();
+        }
     }
 }

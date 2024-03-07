@@ -4,7 +4,6 @@ using UnityEngine;
 public class Managers : MonoBehaviour
 {
     public static Managers Instance;
-
     public static DataManager Data { get; set; }
     public static ResourceManager Resource { get; set; }
     public static UIManager UI { get; set; }
