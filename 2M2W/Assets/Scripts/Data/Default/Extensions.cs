@@ -3,6 +3,7 @@ using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public static class Extensions
 {
@@ -17,4 +18,14 @@ public static class Extensions
 
     public static void BindModelEvent<T>(this ReactiveProperty<T> model, Action<T> action, Component component)
         => Utilities.BindModelEvent(model, action, component);
+
+    public static SoundType ConvertToSoundType(this SoundID id)
+    {
+        if (id > SoundID.BGM)
+        {
+            return SoundType.VFX;
+        }
+
+        return SoundType.BGM;
+    }
 }

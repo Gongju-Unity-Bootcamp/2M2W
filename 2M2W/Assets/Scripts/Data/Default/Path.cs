@@ -7,4 +7,5 @@ public static class Path
     public const string RAWIMAGE = "RawImages/";
     public const string IMAGE = "Images/";
     public const string SPRITE = "Sprites/";
+    public const string SOUND = "Sounds/";
 }
