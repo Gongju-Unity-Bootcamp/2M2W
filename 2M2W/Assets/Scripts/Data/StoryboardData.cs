@@ -1,7 +1,8 @@
 public enum StoryboardID
 {
-    LoadUI = 0,
-    TitleUI = 1
+    None = 0,
+    LoadUI,
+    TitleUI
 }
 
 public class StoryboardData
