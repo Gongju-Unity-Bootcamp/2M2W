@@ -23,15 +23,15 @@ public abstract class UIBase : MonoBehaviour
         Object[] newObjects = new Object[names.Length];
         objects.Add(typeof(T), newObjects);
 
-        for (int i = 0; i < names.Length; ++i)
+        for (int index = 0; index < names.Length; ++index)
         {
             if (typeof(T) == typeof(GameObject))
             {
-                newObjects[i] = Utilities.FindChild(gameObject, names[i], true);
+                newObjects[index] = Utilities.FindChild(gameObject, names[index], true);
             }
             else
             {
-                newObjects[i] = Utilities.FindChild<T>(gameObject, names[i], true);
+                newObjects[index] = Utilities.FindChild<T>(gameObject, names[index], true);
             }
         }
     }
