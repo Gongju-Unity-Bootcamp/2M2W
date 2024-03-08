@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class ResourceManager
     public Dictionary<string, RawImage> RawImages { get; private set; }
     public Dictionary<string, Image> Images { get; private set; }
     public Dictionary<string, Sprite> Sprites { get; set; }
+    public Dictionary<string, AudioClip> AudioClips { get; set; }
 
     public void Init()
     {
@@ -17,6 +19,7 @@ public class ResourceManager
         RawImages = new Dictionary<string, RawImage>();
         Images = new Dictionary<string, Image>();
         Sprites = new Dictionary<string, Sprite>();
+        AudioClips = new Dictionary<string, AudioClip>();
     }
 
     private T Load<T>(Dictionary<string, T> dictionary, string path) where T : Object
@@ -46,6 +49,9 @@ public class ResourceManager
 
     public Sprite LoadSprite(string path)
         => Load(Sprites, string.Concat(Path.SPRITE, path));
+
+    public AudioClip LoadAudioClip(string path) 
+        => Load(AudioClips, string.Concat(Path.SOUND, path));
 
     public GameObject Instantiate(string path, Transform parent = null)
     {
