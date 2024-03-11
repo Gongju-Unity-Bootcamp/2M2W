@@ -53,6 +53,14 @@ public class SoundManager : MonoBehaviour
         audioSource.Stop();
     }
 
+    public void StopAll()
+    {
+        foreach (AudioSource audioSource in audioSources)
+        {
+            audioSource.Stop();
+        }
+    }
+
     public void Pause(SoundType type)
     {
         AudioSource audioSource = audioSources[(int)type];
