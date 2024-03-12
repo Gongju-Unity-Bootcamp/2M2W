@@ -3,19 +3,15 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class ArNavPopup : UIPopup
+public class ArRoadViewPopup : UIPopup
 {
     private enum Buttons
     {
-        Button_01, 
-        Button_02, 
-        Button_03,
-
         Button_01b,
         Button_02b,
         Button_03b,
         Button_04b,
-
+        
         BackButton
     }
 
@@ -29,7 +25,6 @@ public class ArNavPopup : UIPopup
         {
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
-            button.BindViewEvent(OnDragButton, ViewEvent.Drag, this);
         }
     }
 
@@ -38,13 +33,6 @@ public class ArNavPopup : UIPopup
         Buttons button = Enum.Parse<Buttons>(eventData.pointerEnter.name);
 
         ProcessButton(button);
-    }
-
-    private void OnDragButton(PointerEventData eventData)
-    {
-        Buttons button = Enum.Parse<Buttons>(eventData.pointerEnter.name);
-
-        ScrollButton(button);
     }
 
     private void ProcessButton(Buttons button)
@@ -67,11 +55,6 @@ public class ArNavPopup : UIPopup
                 OnBackButton();
                 break;
         }
-    }
-
-    private void ScrollButton(Buttons button)
-    {
-
     }
 
     private void OnClickNavButton()
@@ -101,3 +84,4 @@ public class ArNavPopup : UIPopup
         Managers.UI.ClosePopupUI();
     }
 }
+

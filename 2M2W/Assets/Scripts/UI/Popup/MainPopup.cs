@@ -53,7 +53,7 @@ public class MainPopup : UIPopup
                 OnClickArNavButton();
                 break;
             case Buttons.Button_03:
-                OnClickStreetNavButton();
+                OnClickArRoadViewButton();
                 break;
             case Buttons.Button_04:
                 OnClickQuitButton();
@@ -68,7 +68,7 @@ public class MainPopup : UIPopup
                 OnClickArNavButton();
                 break;
             case Buttons.Button_04b:
-                OnClickStreetNavButton();
+                OnClickArRoadViewButton();
                 break;
         };
     }
@@ -83,9 +83,9 @@ public class MainPopup : UIPopup
         Managers.UI.OpenPopup<ArNavPopup>();
     }
 
-    private void OnClickStreetNavButton()
+    private void OnClickArRoadViewButton()
     {
-        Managers.UI.OpenPopup<StreetNavPopup>();
+        Managers.UI.OpenPopup<ArRoadViewPopup>();
     }
 
     private void OnClickQuitButton()

@@ -60,6 +60,9 @@ public class Utilities : MonoBehaviour
             case ViewEvent.Exit:
                 view.OnPointerExitAsObservable().Subscribe(action).AddTo(component);
                 break;
+            case ViewEvent.Drag:
+                view.OnBeginDragAsObservable().TakeUntil(view.OnEndDragAsObservable()).Subscribe(action).AddTo(component);
+                break;
             case ViewEvent.Click:
                 view.OnPointerClickAsObservable().Subscribe(action).AddTo(component);
                 break;

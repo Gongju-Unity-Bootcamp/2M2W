@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -783,7 +783,7 @@ GameObject:
   - component: {fileID: 8007625621318718843}
   - component: {fileID: 2834064493111912580}
   m_Layer: 5
-  m_Name: Button_03
+  m_Name: Button_03b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1166,7 +1166,7 @@ GameObject:
   - component: {fileID: 8822753932960810237}
   - component: {fileID: 975489094809062106}
   m_Layer: 5
-  m_Name: Button_02
+  m_Name: Button_02b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1829,8 +1829,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 79.5, y: 861}
-  m_SizeDelta: {x: 1119, y: 88}
+  m_AnchoredPosition: {x: 302.45917, y: 861}
+  m_SizeDelta: {x: 1564.9185, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &669500737769998060
 MonoBehaviour:
@@ -2021,7 +2021,7 @@ GameObject:
   - component: {fileID: 2464470771182404216}
   - component: {fileID: 8695272715152827141}
   m_Layer: 5
-  m_Name: Button_01
+  m_Name: Button_01b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2384,7 +2384,7 @@ GameObject:
   - component: {fileID: 2728349836248822355}
   - component: {fileID: 5370714516144766661}
   m_Layer: 5
-  m_Name: Button_04
+  m_Name: Button_04b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
