@@ -416,8 +416,9 @@ GameObject:
   - component: {fileID: 5724019098906311262}
   - component: {fileID: 5271103427337552262}
   - component: {fileID: 8176860174540357946}
+  - component: {fileID: 9050806832545075262}
   m_Layer: 5
-  m_Name: StreetNav
+  m_Name: StreetNavPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,6 +529,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &9050806832545075262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2869196560815753601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58da290e352bc84ea7253998aca4576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2923469710650349647
 GameObject:
   m_ObjectHideFlags: 0
