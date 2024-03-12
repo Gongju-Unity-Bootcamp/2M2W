@@ -76,21 +76,29 @@ public class MainPopup : UIPopup
     private void OnClickNavButton()
     {
         Managers.UI.OpenPopup<NavPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickArNavButton()
     {
         Managers.UI.OpenPopup<ArNavPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickArRoadViewButton()
     {
         Managers.UI.OpenPopup<ArRoadViewPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickQuitButton()
     {
         Application.Quit();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickHomeButton()
@@ -98,5 +106,7 @@ public class MainPopup : UIPopup
         Managers.UI.CloseAllPopupUI();
 
         Managers.UI.OpenPopup<MainPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 }
