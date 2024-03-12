@@ -2151,8 +2151,8 @@ MonoBehaviour:
   latitude: 36.5215168
   longitude: 127.1728302
   level: 11
-  mapWidth: 700
-  mapHeight: 700
+  mapWidth: 1080
+  mapHeight: 1080
   strAPIKey: afcu23ru9f
   secretKey: waClWTkzfwMtpAhtN2RDvTNjMnyHzXUznO7f62Qt
 --- !u!114 &1785544949

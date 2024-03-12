@@ -60,16 +60,22 @@ public class ArRoadViewPopup : UIPopup
     private void OnClickNavButton()
     {
         Managers.UI.OpenPopup<NavPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickArNavButton()
     {
         Managers.UI.OpenPopup<ArNavPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickArRoadViewButton()
     {
         Managers.UI.OpenPopup<ArRoadViewPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnClickHomeButton()
@@ -77,11 +83,15 @@ public class ArRoadViewPopup : UIPopup
         Managers.UI.CloseAllPopupUI();
 
         Managers.UI.OpenPopup<MainPopup>();
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 
     private void OnBackButton()
     {
         Managers.UI.ClosePopupUI();
+
+        Managers.Sound.Play(SoundID.ButtonBack);
     }
 }
 

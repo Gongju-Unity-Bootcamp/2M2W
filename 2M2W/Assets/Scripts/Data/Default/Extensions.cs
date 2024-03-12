@@ -20,7 +20,7 @@ public static class Extensions
 
     public static SoundType ConvertToSoundType(this SoundID id)
     {
-        if (id > SoundID.BGM)
+        if (id > SoundID.VFX)
         {
             return SoundType.VFX;
         }
