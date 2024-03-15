@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 
-public static class JsonUtility
+public static class JsonUtilities
 {
     public static string ObjectToJson(object o)
     => JsonConvert.SerializeObject(o);
