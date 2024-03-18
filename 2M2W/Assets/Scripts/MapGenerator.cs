@@ -7,13 +7,14 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     public RawImage mapRawImage;
+    public GameObject markerObject;
 
     [Header("Input Map Infomation")]
 
     public string strBaseURL = "";
     public string latitude = "";
     public string longitude = "";
-    public int level = 14;
+    public int level = 18;
     public int mapWidth;
     public int mapHeight;
     public string strAPIKey = "";
@@ -23,6 +24,24 @@ public class MapGenerator : MonoBehaviour
     {
         mapRawImage = GetComponent<RawImage>();
         StartCoroutine(MapLoader());
+    }
+
+    private void Update()
+    {
+        //if(Input.touchCount > 0)
+        //{
+        //    Touch touch = Input.GetTouch(0);
+
+        //    if(touch.phase == TouchPhase.Began)
+        //    {
+        //        Vector3 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+        //        touchPosition.z = 0;
+
+        //        GameObject marker = Instantiate(markerObject, touchPosition, Quaternion.identity);
+        //        Debug.Log("Click!");
+        //    }
+        //}
+        
     }
 
     IEnumerator MapLoader()
