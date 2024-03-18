@@ -770,6 +770,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b54a43b4be37e2e41aaa66ae776cfba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  markerObject: {fileID: 2642535020973568896, guid: 4e27db3554c9ef14ebe03240c370a941,
+    type: 3}
 --- !u!1 &3273061927659241863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,10 +1045,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapRawImage: {fileID: 0}
+  markerObject: {fileID: 2642535020973568896, guid: 4e27db3554c9ef14ebe03240c370a941,
+    type: 3}
   strBaseURL: https://naveropenapi.apigw.ntruss.com/map-static/v2/raster
-  latitude: 36.5215168
+  latitude: 36.52082441782959
   longitude: 127.1728302
-  level: 11
+  level: 17
   mapWidth: 1080
   mapHeight: 1080
   strAPIKey: afcu23ru9f

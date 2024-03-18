@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class NavPopup : UIPopup
 {
+    public GameObject markerObject;
+
     private enum Buttons
     {
         Button_01, 
@@ -27,7 +29,6 @@ public class NavPopup : UIPopup
     public override void Init()
     {
         base.Init();
-
         BindButton(typeof(Buttons));
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
@@ -35,6 +36,16 @@ public class NavPopup : UIPopup
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
             button.BindViewEvent(OnDragButton, ViewEvent.Drag, this);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            GameObject marker = Instantiate(markerObject, Input.mousePosition, Quaternion.identity);
         }
     }
 

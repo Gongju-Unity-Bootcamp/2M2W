@@ -16,11 +16,11 @@ public class DataManager
 #if UNITY_EDITOR
         Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(string.Concat(Path.TABLE, Csv.STORYBOARD), data => data.Id);
         Sound = ParseToDictionary<SoundID, SoundData>(string.Concat(Path.TABLE, Csv.SOUND), data => data.Id);
-#else
-        TextAsset Storyboard = Resources.Load<TextAsset>(Csv.STORYBOARD_FIX);
-        Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(Storyboard.text, data => data.Id);
-        TextAsset Sound = Resources.Load<TextAsset>(Csv.SOUND_FIX);
-        Sound = ParseToDictionary<SoundID, SoundData>(Sound.text, data => data.Id);
+//#else
+//        TextAsset Storyboard = Resources.Load<TextAsset>(Csv.STORYBOARD_FIX);
+//        Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(Storyboard.text, data => data.Id);
+//        TextAsset Sound = Resources.Load<TextAsset>(Csv.SOUND_FIX);
+//        Sound = ParseToDictionary<SoundID, SoundData>(Sound.text, data => data.Id);
 #endif
     }
 
