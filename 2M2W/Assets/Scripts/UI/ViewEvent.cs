@@ -2,6 +2,9 @@ public enum ViewEvent
 {
     Enter,
     Exit,
+    BeginDrag,
     Drag,
-    Click
+    EndDrag,
+    Click,
+    DoubleClick
 }

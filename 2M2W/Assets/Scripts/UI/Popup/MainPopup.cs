@@ -17,15 +17,13 @@ public class MainPopup : UIPopup
         Button_01b,
         Button_02b,
         Button_03b,
-        Button_04b,
-
-        Button
+        Button_04b
     }
 
     public override void Init()
     {
         base.Init();
-
+        
         BindButton(typeof(Buttons));
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))

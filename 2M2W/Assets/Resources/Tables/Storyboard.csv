@@ -4,3 +4,6 @@ Id,Name,Prefab
 3,ArNav,ArNavPopup
 4,ArRoadView,ArRoadViewPopup
 5,StreetNav,StreetNavPopup
+6,NavDetails,NavDetailsPopup
+7,ArNavDetails,ArNavDetailsPopup
+8,ArNavPlay,ArNavPlayPopup

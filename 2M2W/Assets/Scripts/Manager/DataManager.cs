@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.IO;
 using System;
+using UnityEngine;
 
 public class DataManager
 {
@@ -16,11 +17,12 @@ public class DataManager
 #if UNITY_EDITOR
         Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(string.Concat(Path.TABLE, Csv.STORYBOARD), data => data.Id);
         Sound = ParseToDictionary<SoundID, SoundData>(string.Concat(Path.TABLE, Csv.SOUND), data => data.Id);
-//#else
-//        TextAsset Storyboard = Resources.Load<TextAsset>(Csv.STORYBOARD_FIX);
-//        Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(Storyboard.text, data => data.Id);
-//        TextAsset Sound = Resources.Load<TextAsset>(Csv.SOUND_FIX);
-//        Sound = ParseToDictionary<SoundID, SoundData>(Sound.text, data => data.Id);
+#else
+        string path;
+        path = Resources.Load<TextAsset>(Csv.STORYBOARD_FIX).text;
+        Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(path, data => data.Id);
+        path = Resources.Load<TextAsset>(Csv.SOUND_FIX).text;
+        Sound = ParseToDictionary<SoundID, SoundData>(path, data => data.Id);
 #endif
     }
 

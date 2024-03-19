@@ -1,3 +1,5 @@
+using Microsoft.Geospatial;
+using Microsoft.Maps.Unity;
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -5,7 +7,10 @@ using UnityEngine;
 
 public class NavPopup : UIPopup
 {
-    public GameObject markerObject;
+    private enum RawImages
+    {
+        RawImage
+    }
 
     private enum Buttons
     {
@@ -22,13 +27,17 @@ public class NavPopup : UIPopup
         Button_03b,
         Button_04b,
 
-        BackButton,
-        Button
+        BackButton
     }
+
+    private MapRenderer map;
+    private LatLon lastLatLon;
 
     public override void Init()
     {
         base.Init();
+
+        BindRawImage(typeof(RawImages));
         BindButton(typeof(Buttons));
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
@@ -37,16 +46,16 @@ public class NavPopup : UIPopup
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
             button.BindViewEvent(OnDragButton, ViewEvent.Drag, this);
         }
-    }
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+        foreach (RawImages rawImageIndex in Enum.GetValues(typeof(RawImages)))
         {
-            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            GameObject marker = Instantiate(markerObject, Input.mousePosition, Quaternion.identity);
+            RawImage rawImage = GetRawImage((int)rawImageIndex);
+            rawImage.BindViewEvent(OnBeginDragRawImage, ViewEvent.BeginDrag, this);
+            rawImage.BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
+            rawImage.BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
         }
+
+        map = Managers.App.MapRenderer;
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -58,9 +67,12 @@ public class NavPopup : UIPopup
 
     private void OnDragButton(PointerEventData eventData)
     {
-        Buttons button = Enum.Parse<Buttons>(eventData.pointerEnter.name);
+        Button button = eventData.pointerEnter.GetComponent<Button>();
+        RectTransform buttonGroup = button.GetComponentInParent<HorizontalLayoutGroup>().GetComponent<RectTransform>();
 
-        ScrollButton(button);
+        Vector2 delta = eventData.delta;
+        float deltaX = buttonGroup.InverseTransformDirection(delta).x;
+        buttonGroup.localPosition += new Vector3(deltaX, 0f, 0f);
     }
 
     private void ProcessButton(Buttons button)
@@ -83,11 +95,6 @@ public class NavPopup : UIPopup
                 OnBackButton();
                 break;
         }
-    }
-
-    private void ScrollButton(Buttons button)
-    {
-
     }
 
     private void OnClickNavButton()
@@ -125,5 +132,42 @@ public class NavPopup : UIPopup
         Managers.UI.ClosePopupUI();
 
         Managers.Sound.Play(SoundID.ButtonBack);
+    }
+
+    private void OnBeginDragRawImage(PointerEventData eventData)
+    {
+        if (map.Raycast(GetRay(eventData), out MapRendererRaycastHit hitInfo))
+        {
+            lastLatLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
+        }
+    }
+
+    private void OnDragRawImage(PointerEventData eventData)
+    {
+        if (map.Raycast(GetRay(eventData), out MapRendererRaycastHit hitInfo))
+        {
+            double latDelta = (hitInfo.Location.LatitudeInDegrees - lastLatLon.LatitudeInDegrees) * Managers.App.polatedValue;
+            double lonDelta = (hitInfo.Location.LongitudeInDegrees - lastLatLon.LongitudeInDegrees) * Managers.App.polatedValue;
+
+            LatLon newLatLon = new LatLon(map.Center.LatitudeInDegrees - latDelta, map.Center.LongitudeInDegrees - lonDelta);
+
+            map.SetMapScene(new MapSceneOfLocationAndZoomLevel(newLatLon, map.ZoomLevel), MapSceneAnimationKind.None);
+        }
+    }
+
+    private void OnDoubleClickRawImage(PointerEventData eventData)
+    {
+        if (map.Raycast(GetRay(eventData), out MapRendererRaycastHit hitInfo))
+        {
+            LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
+        }
+    }
+
+    private Ray GetRay(PointerEventData eventData)
+    {
+        RawImage rawImage = eventData.pointerEnter.GetComponent<RawImage>();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition, null, out Vector2 localPoint);
+
+        return Camera.main.ScreenPointToRay(localPoint);
     }
 }

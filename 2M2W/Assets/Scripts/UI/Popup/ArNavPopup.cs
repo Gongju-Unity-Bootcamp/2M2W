@@ -1,7 +1,6 @@
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine;
 
 public class ArNavPopup : UIPopup
 {
