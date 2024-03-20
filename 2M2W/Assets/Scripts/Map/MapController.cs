@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class MapController : MonoBehaviour
 {
+#if UNITY_ANDROID              
     private float initialDistance;
     private float previousDistance;
-
-    private const float maxZoom = 17f, minZoom = 12f;
+#endif
+    private const float maxZoom = 18.5f, minZoom = 12.5f;
 
     private void Update()
     {
@@ -26,27 +27,32 @@ public class MapController : MonoBehaviour
             switch (scroll)
             {
                 case > 0:
-                    Managers.App.MapController.Zoom(Managers.App.MapRenderer.ZoomLevel + scroll * Time.deltaTime);
+                    Managers.App.MapController.Zoom(Managers.App.MapRenderer.ZoomLevel + (scroll * Managers.App.polatedValue));
                     break;
                 case < 0:
-                    Managers.App.MapController.Zoom(-Managers.App.MapRenderer.ZoomLevel + scroll * Time.deltaTime);
+                    Managers.App.MapController.Zoom(-Managers.App.MapRenderer.ZoomLevel + (scroll * Managers.App.polatedValue));
                     break;
             }
         }
 #elif UNITY_ANDROID
         int touch = Input.touchCount;
 
-        if (touch >= 2)
+        if (touch == 2)
         {
             Touch touch1 = Input.GetTouch(0);
             Touch touch2 = Input.GetTouch(1);
+
+            if (touch1.phase == TouchPhase.Stationary || touch2.phase == TouchPhase.Stationary)
+            {
+                return;
+            }
 
             if (touch1.phase == TouchPhase.Began || touch2.phase == TouchPhase.Began)
             {
                 initialDistance = Vector2.Distance(touch1.position, touch2.position);
                 previousDistance = initialDistance;
             }
-            else if (touch1.phase == TouchPhase.Moved || touch2.phase == TouchPhase.Moved)
+            else if (touch1.phase == TouchPhase.Moved && touch2.phase == TouchPhase.Moved)
             {
                 float currentDistance = Vector2.Distance(touch1.position, touch2.position);
                 float pinchAmount = currentDistance - previousDistance;
@@ -57,10 +63,10 @@ public class MapController : MonoBehaviour
                     switch (pinchAmount)
                     {
                         case > 0:
-                            Managers.App.MapController.Zoom(Managers.App.MapRenderer.ZoomLevel + pinchAmount * Time.deltaTime);
+                            Managers.App.MapController.Zoom(pinchAmount * Managers.App.polatedValue);
                             break;
                         case < 0:
-                            Managers.App.MapController.Zoom(-Managers.App.MapRenderer.ZoomLevel + pinchAmount * Time.deltaTime);
+                            Managers.App.MapController.Zoom(pinchAmount * Managers.App.polatedValue);
                             break;
                     }
                 }

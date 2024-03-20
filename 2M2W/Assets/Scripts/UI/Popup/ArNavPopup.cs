@@ -1,3 +1,4 @@
+using Microsoft.Maps.Unity;
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -47,12 +48,14 @@ public class ArNavPopup : UIPopup
                 Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Flat;
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
                 Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Elevated;
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.BackButton:

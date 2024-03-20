@@ -2,6 +2,7 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
+using Microsoft.Maps.Unity;
 
 public class MainPopup : UIPopup
 {
@@ -47,12 +48,14 @@ public class MainPopup : UIPopup
         switch (button)
         {
             case Buttons.Button_01:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Flat;
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_02:
                 Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_03:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Elevated;
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.Button_04:
@@ -63,12 +66,14 @@ public class MainPopup : UIPopup
                 Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Flat;
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
                 Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Elevated;
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.Button:

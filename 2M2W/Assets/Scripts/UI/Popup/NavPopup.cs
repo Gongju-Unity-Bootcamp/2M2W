@@ -80,18 +80,16 @@ public class NavPopup : UIPopup
             case Buttons.Button_Right:
                 Managers.App.MapController.PanEast();
                 break;
-#if UNITY_EDITOR
-            case Buttons.CurrentPosIcon:
-                Managers.App.MapRenderer.Center = new LatLon(36.5212388346086, 127.172650559606);
-                break;
-#elif UNITY_ANDROID              
             case Buttons.CurrentPosIcon:
                 if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
                 {
-                    Managers.App.MapRenderer.Center = Managers.App.latLon;
+                    Managers.App.MapRenderer.Center = Managers.App.MapLocationService.GetLatLon();
+                }
+                else
+                {
+                    Managers.App.MapRenderer.Center = new LatLon(36.5212388346086, 127.172650559606);
                 }
                 break;
-#endif
             case Buttons.NavModeIcon:
                 if (false == Managers.App.navMode)
                 {
@@ -110,12 +108,14 @@ public class NavPopup : UIPopup
                 Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Flat;
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
                 Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
+                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Elevated;
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.BackButton:
