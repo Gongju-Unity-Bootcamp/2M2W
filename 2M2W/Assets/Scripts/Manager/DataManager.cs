@@ -1,12 +1,11 @@
-using CsvHelper;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.IO;
 using System;
+using CsvHelper;
 using UnityEngine;
-
 public class DataManager
 {
     public Dictionary<StoryboardID, StoryboardData> Storyboard { get; set; }
@@ -17,7 +16,7 @@ public class DataManager
 #if UNITY_EDITOR
         Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(string.Concat(Path.TABLE, Csv.STORYBOARD), data => data.Id);
         Sound = ParseToDictionary<SoundID, SoundData>(string.Concat(Path.TABLE, Csv.SOUND), data => data.Id);
-#else
+#elif UNITY_ANDROID
         string path;
         path = Resources.Load<TextAsset>(Csv.STORYBOARD_FIX).text;
         Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(path, data => data.Id);
@@ -30,7 +29,7 @@ public class DataManager
     {
 #if UNITY_EDITOR
         using StreamReader reader = new StreamReader(path);
-#else
+#elif UNITY_ANDROID
         using StringReader reader = new StringReader(path);
 #endif
         using CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture);

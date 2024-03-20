@@ -29,7 +29,7 @@ public class AppManager : MonoBehaviour
         Managers.UI.OpenPopup<MainPopup>();
         Managers.Sound.Play(SoundID.MainBGM);
 
-        //StartCoroutine(GetLatLonPermissionCo());
+        StartCoroutine(GetLatLonPermissionCo());
     }
 
     private IEnumerator GetLatLonPermissionCo()
