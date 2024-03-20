@@ -54,12 +54,7 @@ public class Utilities : MonoBehaviour
     {
         switch (type)
         {
-            case ViewEvent.Enter:
-                view.OnPointerEnterAsObservable().Subscribe(action).AddTo(component);
-                break;
-            case ViewEvent.Exit:
-                view.OnPointerExitAsObservable().Subscribe(action).AddTo(component);
-                break;
+#if UNITY_EDITOR
             case ViewEvent.BeginDrag:
                 view.OnBeginDragAsObservable().Subscribe(action).AddTo(component);
                 break;
@@ -77,6 +72,34 @@ public class Utilities : MonoBehaviour
                 e.Buffer(e.Throttle(TimeSpan.FromMilliseconds(200)))
                  .Where(buffer => buffer.Count >= 2).Subscribe(_ => action.Invoke(null)).AddTo(component);
                 break;
+#elif UNITY_ANDROID
+            case ViewEvent.BeginDrag:
+                view.OnBeginDragAsObservable()
+                .Where(_ => Input.touchCount <= 1)
+                .Subscribe(action).AddTo(component);
+                break;
+            case ViewEvent.Drag:
+                view.OnDragAsObservable()
+                .Where(_ => Input.touchCount <= 1)
+                .Subscribe(action).AddTo(component);
+                break;
+            case ViewEvent.EndDrag:
+                view.OnEndDragAsObservable()
+                .Where(_ => Input.touchCount <= 1)
+                .Subscribe(action).AddTo(component);
+                break;
+            case ViewEvent.Click:
+                view.OnPointerClickAsObservable()
+                .Where(_ => Input.touchCount <= 1)
+                .Subscribe(action).AddTo(component);
+                break;
+            case ViewEvent.DoubleClick:
+                IObservable<PointerEventData> e = view.OnPointerClickAsObservable();
+                e.Where(_ => Input.touchCount <= 1)
+                 .Buffer(e.Throttle(TimeSpan.FromMilliseconds(200)))
+                 .Where(buffer => buffer.Count >= 2).Subscribe(_ => action.Invoke(null)).AddTo(component);
+                break;
+#endif
         };
     }
 

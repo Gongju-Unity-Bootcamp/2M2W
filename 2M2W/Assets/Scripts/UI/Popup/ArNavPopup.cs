@@ -28,7 +28,6 @@ public class ArNavPopup : UIPopup
         {
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
-            button.BindViewEvent(OnDragButton, ViewEvent.Drag, this);
         }
     }
 
@@ -39,74 +38,28 @@ public class ArNavPopup : UIPopup
         ProcessButton(button);
     }
 
-    private void OnDragButton(PointerEventData eventData)
-    {
-        Buttons button = Enum.Parse<Buttons>(eventData.pointerEnter.name);
-
-        ScrollButton(button);
-    }
-
     private void ProcessButton(Buttons button)
     {
         switch (button)
         {
             case Buttons.Button_01b:
-                OnClickHomeButton();
+                Managers.UI.CloseAllPopupUI();
+                Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
-                OnClickNavButton();
+                Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
-                OnClickArNavButton();
+                Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
-                OnClickArRoadViewButton();
+                Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.BackButton:
-                OnBackButton();
+                Managers.UI.ClosePopupUI();
                 break;
         }
-    }
-
-    private void ScrollButton(Buttons button)
-    {
-
-    }
-
-    private void OnClickNavButton()
-    {
-        Managers.UI.OpenPopup<NavPopup>();
 
         Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickArNavButton()
-    {
-        Managers.UI.OpenPopup<ArNavPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickArRoadViewButton()
-    {
-        Managers.UI.OpenPopup<ArRoadViewPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickHomeButton()
-    {
-        Managers.UI.CloseAllPopupUI();
-
-        Managers.UI.OpenPopup<MainPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnBackButton()
-    {
-        Managers.UI.ClosePopupUI();
-
-        Managers.Sound.Play(SoundID.ButtonBack);
     }
 }

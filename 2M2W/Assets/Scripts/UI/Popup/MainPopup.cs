@@ -17,7 +17,9 @@ public class MainPopup : UIPopup
         Button_01b,
         Button_02b,
         Button_03b,
-        Button_04b
+        Button_04b,
+
+        Button
     }
 
     public override void Init()
@@ -45,65 +47,45 @@ public class MainPopup : UIPopup
         switch (button)
         {
             case Buttons.Button_01:
-                OnClickNavButton();
+                Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_02:
-                OnClickArNavButton();
+                Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_03:
-                OnClickArRoadViewButton();
+                Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.Button_04:
-                OnClickQuitButton();
+                Application.Quit();
                 break;
             case Buttons.Button_01b:
-                OnClickHomeButton();
+                Managers.UI.CloseAllPopupUI();
+                Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
-                OnClickNavButton();
+                Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
-                OnClickArNavButton();
+                Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
-                OnClickArRoadViewButton();
+                Managers.UI.OpenPopup<ArRoadViewPopup>();
+                break;
+            case Buttons.Button:
+                if (false == Managers.App.mute)
+                {
+                    Managers.App.mute = true;
+                    Managers.Sound.Pause(SoundType.BGM);
+                    GetButton((int)Buttons.Button).image.sprite = Managers.Resource.LoadSprite("spr_MuteMusic");
+                }
+                else
+                {
+                    Managers.App.mute = false;
+                    Managers.Sound.UnPause(SoundType.BGM);
+                    GetButton((int)Buttons.Button).image.sprite = Managers.Resource.LoadSprite("spr_PlayMusic");
+                }
                 break;
         };
-    }
-
-    private void OnClickNavButton()
-    {
-        Managers.UI.OpenPopup<NavPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickArNavButton()
-    {
-        Managers.UI.OpenPopup<ArNavPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickArRoadViewButton()
-    {
-        Managers.UI.OpenPopup<ArRoadViewPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickQuitButton()
-    {
-        Application.Quit();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickHomeButton()
-    {
-        Managers.UI.CloseAllPopupUI();
-
-        Managers.UI.OpenPopup<MainPopup>();
 
         Managers.Sound.Play(SoundID.ButtonClick);
     }

@@ -1,11 +1,12 @@
+using CsvHelper;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.IO;
 using System;
-using CsvHelper;
 using UnityEngine;
+
 public class DataManager
 {
     public Dictionary<StoryboardID, StoryboardData> Storyboard { get; set; }

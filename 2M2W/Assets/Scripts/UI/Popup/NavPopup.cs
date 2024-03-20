@@ -2,6 +2,7 @@ using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.Android;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -14,13 +15,18 @@ public class NavPopup : UIPopup
 
     private enum Buttons
     {
+        Button_Up,
+        Button_Down,
+        Button_Left,
+        Button_Right,
+
+        CurrentPosIcon,
+        NavModeIcon,
+
         Button_01, 
         Button_02, 
         Button_03, 
         Button_04, 
-        Button_05, 
-        Button_06, 
-        Button_07,
 
         Button_01b,
         Button_02b,
@@ -29,9 +35,6 @@ public class NavPopup : UIPopup
 
         BackButton
     }
-
-    private MapRenderer map;
-    private LatLon lastLatLon;
 
     public override void Init()
     {
@@ -44,18 +47,14 @@ public class NavPopup : UIPopup
         {
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
-            button.BindViewEvent(OnDragButton, ViewEvent.Drag, this);
         }
 
         foreach (RawImages rawImageIndex in Enum.GetValues(typeof(RawImages)))
         {
             RawImage rawImage = GetRawImage((int)rawImageIndex);
-            rawImage.BindViewEvent(OnBeginDragRawImage, ViewEvent.BeginDrag, this);
             rawImage.BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
             rawImage.BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
         }
-
-        map = Managers.App.MapRenderer;
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -65,109 +64,80 @@ public class NavPopup : UIPopup
         ProcessButton(button);
     }
 
-    private void OnDragButton(PointerEventData eventData)
-    {
-        Button button = eventData.pointerEnter.GetComponent<Button>();
-        RectTransform buttonGroup = button.GetComponentInParent<HorizontalLayoutGroup>().GetComponent<RectTransform>();
-
-        Vector2 delta = eventData.delta;
-        float deltaX = buttonGroup.InverseTransformDirection(delta).x;
-        buttonGroup.localPosition += new Vector3(deltaX, 0f, 0f);
-    }
-
     private void ProcessButton(Buttons button)
     {
         switch (button)
         {
+            case Buttons.Button_Up:
+                Managers.App.MapController.PanNorth();
+                break;
+            case Buttons.Button_Down:
+                Managers.App.MapController.PanSouth();
+                break;
+            case Buttons.Button_Left:
+                Managers.App.MapController.PanWest();
+                break;
+            case Buttons.Button_Right:
+                Managers.App.MapController.PanEast();
+                break;
+#if UNITY_EDITOR
+            case Buttons.CurrentPosIcon:
+                Managers.App.MapRenderer.Center = new LatLon(36.5212388346086, 127.172650559606);
+                break;
+#elif UNITY_ANDROID              
+            case Buttons.CurrentPosIcon:
+                if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+                {
+                    Managers.App.MapRenderer.Center = Managers.App.latLon;
+                }
+                break;
+#endif
+            case Buttons.NavModeIcon:
+                if (false == Managers.App.navMode)
+                {
+                    Managers.App.navMode = true;
+                    Managers.App.NavTile.ImageryType = MapImageryType.Symbolic;
+                    Managers.App.NavTile.ImageryStyle = MapImageryStyle.Vibrant;
+                }
+                else
+                {
+                    Managers.App.navMode = false;
+                    Managers.App.NavTile.ImageryType = MapImageryType.Aerial;
+                }
+                break;
             case Buttons.Button_01b:
-                OnClickHomeButton();
+                Managers.UI.CloseAllPopupUI();
+                Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
-                OnClickNavButton();
+                Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
-                OnClickArNavButton();
+                Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
-                OnClickArRoadViewButton();
+                Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.BackButton:
-                OnBackButton();
+                Managers.UI.ClosePopupUI();
                 break;
         }
-    }
-
-    private void OnClickNavButton()
-    {
-        Managers.UI.OpenPopup<NavPopup>();
 
         Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickArNavButton()
-    {
-        Managers.UI.OpenPopup<ArNavPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickArRoadViewButton()
-    {
-        Managers.UI.OpenPopup<ArRoadViewPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnClickHomeButton()
-    {
-        Managers.UI.CloseAllPopupUI();
-
-        Managers.UI.OpenPopup<MainPopup>();
-
-        Managers.Sound.Play(SoundID.ButtonClick);
-    }
-
-    private void OnBackButton()
-    {
-        Managers.UI.ClosePopupUI();
-
-        Managers.Sound.Play(SoundID.ButtonBack);
-    }
-
-    private void OnBeginDragRawImage(PointerEventData eventData)
-    {
-        if (map.Raycast(GetRay(eventData), out MapRendererRaycastHit hitInfo))
-        {
-            lastLatLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
-        }
     }
 
     private void OnDragRawImage(PointerEventData eventData)
     {
-        if (map.Raycast(GetRay(eventData), out MapRendererRaycastHit hitInfo))
-        {
-            double latDelta = (hitInfo.Location.LatitudeInDegrees - lastLatLon.LatitudeInDegrees) * Managers.App.polatedValue;
-            double lonDelta = (hitInfo.Location.LongitudeInDegrees - lastLatLon.LongitudeInDegrees) * Managers.App.polatedValue;
+        Vector2 dragDelta = -eventData.delta * Managers.App.polatedValue;
 
-            LatLon newLatLon = new LatLon(map.Center.LatitudeInDegrees - latDelta, map.Center.LongitudeInDegrees - lonDelta);
-
-            map.SetMapScene(new MapSceneOfLocationAndZoomLevel(newLatLon, map.ZoomLevel), MapSceneAnimationKind.None);
-        }
+        Managers.App.MapController.Pan(dragDelta, false);
     }
 
     private void OnDoubleClickRawImage(PointerEventData eventData)
     {
-        if (map.Raycast(GetRay(eventData), out MapRendererRaycastHit hitInfo))
+        if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
         {
             LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
         }
-    }
-
-    private Ray GetRay(PointerEventData eventData)
-    {
-        RawImage rawImage = eventData.pointerEnter.GetComponent<RawImage>();
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition, null, out Vector2 localPoint);
-
-        return Camera.main.ScreenPointToRay(localPoint);
     }
 }

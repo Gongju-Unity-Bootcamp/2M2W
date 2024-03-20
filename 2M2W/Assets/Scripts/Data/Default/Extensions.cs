@@ -3,6 +3,7 @@ using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class Extensions
 {
@@ -26,5 +27,13 @@ public static class Extensions
         }
 
         return SoundType.BGM;
+    }
+
+    public static Ray GetRay(this PointerEventData eventData)
+    {
+        RawImage rawImage = eventData.pointerEnter.GetComponent<RawImage>();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition, null, out Vector2 localPoint);
+
+        return Camera.main.ScreenPointToRay(localPoint);
     }
 }

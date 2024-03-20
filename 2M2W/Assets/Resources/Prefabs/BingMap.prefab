@@ -11,11 +11,15 @@ GameObject:
   - component: {fileID: 7573366797341074793}
   - component: {fileID: 775865954331609222}
   - component: {fileID: 3487356784212313100}
+  - component: {fileID: 641653602618376036}
   - component: {fileID: 1226137230444225166}
   - component: {fileID: 1071581758353393245}
   - component: {fileID: 4012185404608984887}
+  - component: {fileID: 4031282869593719262}
+  - component: {fileID: 4844455361978774210}
+  - component: {fileID: 1172036528289021038}
   m_Layer: 10
-  m_Name: MapRenderer
+  m_Name: BingMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +58,7 @@ MonoBehaviour:
   _areRoadsEnabled: 1
   _areLabelsEnabled: 1
   _isHillShadingEnabled: 1
-  _imageryStyle: 6
+  _imageryStyle: 7
 --- !u!114 &3487356784212313100
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -67,6 +71,26 @@ MonoBehaviour:
   m_Script: {fileID: 243684798, guid: f58183a31672bf641bbeeaef3d4759c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &641653602618376036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725903672366209685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -837401356, guid: f58183a31672bf641bbeeaef3d4759c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _developerKey: 
+  _developerKeySource: 1
+  _showMapDataInEditor: 1
+  _languageOverride: 23
+  _languageChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  _regionOverride: 
 --- !u!114 &1226137230444225166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,22 +104,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _version: 3
-  _mapSession: {fileID: 0}
+  _mapSession: {fileID: 641653602618376036}
   _mapEdgeColor: {r: 0.62352943, g: 0.64705884, b: 0.69411767, a: 1}
   _mapEdgeColorFadeDistance: 0.02
-  _detailOffset: -0.7
+  _detailOffset: -1
   _numElevationTileFallbackLods: 0
   _requestTilesAroundView: 0
   _center:
     _latitude: 36.5212388346086
     _longitude: 127.172650559606
-  _zoomLevel: 17.5
+  _zoomLevel: 16.5
   _minimumZoomLevel: 1
   _maximumZoomLevel: 20
   _mapTerrainType: 2
   _mapShape: 0
   _localMapDimension: {x: 3, y: 3}
-  _localMapRadius: 0.5
+  _localMapRadius: 1.5
   _localMapBaseHeight: 0.3
   _elevationScale: 0
   _castShadows: 0
@@ -146,6 +170,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _percentUtilization: 1
   _maxCacheSizeInBytes: 2147483648
+--- !u!114 &4031282869593719262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725903672366209685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b303ffbed90191b4dbbf76b03bf83d80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rotationSpeed: 3.5
+  _panSpeed: 0.5
+  _onTapAndHold:
+    m_PersistentCalls:
+      m_Calls: []
+  _onDoubleTap:
+    m_PersistentCalls:
+      m_Calls: []
+  _onInteractionStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  _onInteractionEnded:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4844455361978774210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725903672366209685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0e72a42b0428d4ea03bdfb23f0a1dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1172036528289021038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725903672366209685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f516b169d1e6394fa3bbaed1fcbe214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  _zoomSpeed: 5
 --- !u!1 &4665505445303075231
 GameObject:
   m_ObjectHideFlags: 0
