@@ -9,18 +9,18 @@ using UnityEngine;
 
 public class DataManager
 {
-    public Dictionary<StoryboardID, StoryboardData> Storyboard { get; set; }
+    public Dictionary<PopupID, PopupData> Popup { get; set; }
     public Dictionary<SoundID, SoundData> Sound { get; set; }
 
     public void Init()
     {
 #if UNITY_EDITOR
-        Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(string.Concat(Path.TABLE, Csv.STORYBOARD), data => data.Id);
+        Popup = ParseToDictionary<PopupID, PopupData>(string.Concat(Path.TABLE, Csv.POPUP), data => data.Id);
         Sound = ParseToDictionary<SoundID, SoundData>(string.Concat(Path.TABLE, Csv.SOUND), data => data.Id);
 #elif UNITY_ANDROID
         string path;
-        path = Resources.Load<TextAsset>(Csv.STORYBOARD_FIX).text;
-        Storyboard = ParseToDictionary<StoryboardID, StoryboardData>(path, data => data.Id);
+        path = Resources.Load<TextAsset>(Csv.POPUP_FIX).text;
+        Popup = ParseToDictionary<PopupID, PopupData>(path, data => data.Id);
         path = Resources.Load<TextAsset>(Csv.SOUND_FIX).text;
         Sound = ParseToDictionary<SoundID, SoundData>(path, data => data.Id);
 #endif

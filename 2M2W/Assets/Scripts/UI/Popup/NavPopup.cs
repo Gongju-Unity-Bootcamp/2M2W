@@ -22,6 +22,7 @@ public class NavPopup : UIPopup
 
         CurrentPosIcon,
         NavModeIcon,
+        EnlargementIcon,
 
         Button_01, 
         Button_02, 
@@ -103,19 +104,20 @@ public class NavPopup : UIPopup
                     Managers.App.NavTile.ImageryType = MapImageryType.Aerial;
                 }
                 break;
+            case Buttons.EnlargementIcon:
+                Managers.UI.OpenPopup<StreetNavPopup>();
+                break;
             case Buttons.Button_01b:
                 Managers.UI.CloseAllPopupUI();
                 Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
-                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Flat;
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
                 Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
-                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Elevated;
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
             case Buttons.BackButton:

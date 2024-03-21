@@ -10,12 +10,13 @@ public class ArRoadViewPopup : UIPopup
 {
     private enum RawImages
     {
-        ARImage,
-        RawImage
+        ARImage
     }
 
     private enum Buttons
     {
+        Button_Up,
+        Button_Down,
         Button_Left,
         Button_Right,
 
@@ -62,11 +63,17 @@ public class ArRoadViewPopup : UIPopup
     {
         switch (button)
         {
+            case Buttons.Button_Up:
+                Managers.App.MapController.PanNorth();
+                break;
+            case Buttons.Button_Down:
+                Managers.App.MapController.PanSouth();
+                break;
             case Buttons.Button_Left:
-                Managers.App.cameraPivot.transform.Rotate(Vector3.down * 30f);
+                Managers.App.MapController.PanWest();
                 break;
             case Buttons.Button_Right:
-                Managers.App.cameraPivot.transform.Rotate(Vector3.up * 30f);
+                Managers.App.MapController.PanEast();
                 break;
             case Buttons.CurrentPosIcon:
                 if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
@@ -99,14 +106,12 @@ public class ArRoadViewPopup : UIPopup
                 Managers.UI.OpenPopup<MainPopup>();
                 break;
             case Buttons.Button_02b:
-                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Flat;
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
                 Managers.UI.OpenPopup<ArNavPopup>();
                 break;
             case Buttons.Button_04b:
-                Managers.App.MapRenderer.MapTerrainType = MapTerrainType.Elevated;
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
         }

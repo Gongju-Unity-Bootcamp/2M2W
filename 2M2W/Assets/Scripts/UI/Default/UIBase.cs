@@ -51,6 +51,9 @@ public abstract class UIBase : MonoBehaviour
     protected void BindButton(Type type)
         => Bind<Button>(type);
 
+    protected void BindInputField(Type type)
+    => Bind<TMP_InputField>(type);
+
     protected T Get<T>(int index) where T : Object
     {
         if (objects.TryGetValue(typeof(T), out Object[] newObjects))
@@ -75,4 +78,7 @@ public abstract class UIBase : MonoBehaviour
 
     protected Button GetButton(int index)
         => Get<Button>(index);
+
+    protected TMP_InputField GetInputField(int index)
+        => Get<TMP_InputField>(index);
 }

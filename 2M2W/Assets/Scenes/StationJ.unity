@@ -97,8 +97,10 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: bd67d976f6d94ea4fb51d1171fa3e7b3,
+    type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 56eec51da1bf90545b0ab62957cbb395,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -179,7 +181,7 @@ GameObject:
   - component: {fileID: 1050288760}
   - component: {fileID: 1050288759}
   - component: {fileID: 1050288762}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +260,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1073741887
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -280,7 +282,7 @@ Transform:
   m_GameObject: {fileID: 1050288758}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 2.8011584, y: -8.86289, z: -7.7913847}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -298,6 +300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ed471c9e6146646b80d7e1a551d8cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dayRotation: {x: 0, y: 0, z: 0}
+  nightRotation: {x: 180, y: 0, z: 0}
 --- !u!1 &1323550131
 GameObject:
   m_ObjectHideFlags: 0
