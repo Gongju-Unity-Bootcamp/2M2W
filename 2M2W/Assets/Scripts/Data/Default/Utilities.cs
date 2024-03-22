@@ -70,7 +70,7 @@ public class Utilities : MonoBehaviour
             case ViewEvent.DoubleClick:
                 IObservable<PointerEventData> e = view.OnPointerClickAsObservable();
                 e.Buffer(e.Throttle(TimeSpan.FromMilliseconds(200)))
-                 .Where(buffer => buffer.Count >= 2).Subscribe(_ => action.Invoke(null)).AddTo(component);
+                 .Where(buffer => buffer.Count >= 2).Subscribe(buffer => action.Invoke(buffer[0])).AddTo(component);
                 break;
 #elif UNITY_ANDROID
             case ViewEvent.BeginDrag:
@@ -97,7 +97,7 @@ public class Utilities : MonoBehaviour
                 IObservable<PointerEventData> e = view.OnPointerClickAsObservable();
                 e.Where(_ => Input.touchCount <= 1)
                  .Buffer(e.Throttle(TimeSpan.FromMilliseconds(200)))
-                 .Where(buffer => buffer.Count >= 2).Subscribe(_ => action.Invoke(null)).AddTo(component);
+                 .Where(buffer => buffer.Count >= 2).Subscribe(buffer => action.Invoke(buffer[0])).AddTo(component);
                 break;
             case ViewEvent.Enable:
                 view.OnEnableAsObservable().Subscribe(_ => action.Invoke(null)).AddTo(component);

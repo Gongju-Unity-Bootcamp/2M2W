@@ -1,5 +1,7 @@
+using Microsoft.Maps.Unity.Search;
 using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
+using System.Threading.Tasks;
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.Android;
@@ -82,27 +84,10 @@ public class NavPopup : UIPopup
                 Managers.App.MapController.PanEast();
                 break;
             case Buttons.CurrentPosIcon:
-                if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
-                {
-                    Managers.App.MapRenderer.Center = Managers.App.MapLocationService.GetLatLon();
-                }
-                else
-                {
-                    Managers.App.MapRenderer.Center = new LatLon(36.5212388346086, 127.172650559606);
-                }
+                Managers.App.MapRenderer.Center = Managers.App.LatLonAlt.LatLon;
                 break;
             case Buttons.NavModeIcon:
-                if (false == Managers.App.navMode)
-                {
-                    Managers.App.navMode = true;
-                    Managers.App.NavTile.ImageryType = MapImageryType.Symbolic;
-                    Managers.App.NavTile.ImageryStyle = MapImageryStyle.Vibrant;
-                }
-                else
-                {
-                    Managers.App.navMode = false;
-                    Managers.App.NavTile.ImageryType = MapImageryType.Aerial;
-                }
+                Managers.App.GetNavMode();
                 break;
             case Buttons.EnlargementIcon:
                 Managers.UI.OpenPopup<StreetNavPopup>();
@@ -137,9 +122,20 @@ public class NavPopup : UIPopup
 
     private void OnDoubleClickRawImage(PointerEventData eventData)
     {
+        //MapPin mapPin = Managers.App.MapPin;
+
         if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
         {
             LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
+            //mapPin = new MapPin();
+            //mapPin.gameObject.AddComponent<Image>().sprite = Managers.Resource.LoadSprite("spr_PopupIcon");
+            //mapPin.Location = latLon;
+            //Managers.App.MapPinLayer.MapPins.Add(mapPin);
+            Debug.Log("Yes" + latLon);
+        }
+        else
+        {
+            Debug.Log("No");
         }
     }
 }

@@ -57,7 +57,4 @@ public class MapLocationService : MonoBehaviour
                 return true;
         }
     }
-
-    public LatLon GetLatLon()
-        => new LatLon(locationService.lastData.latitude, locationService.lastData.longitude);
 }

@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 4012185404608984887}
   - component: {fileID: 4031282869593719262}
   - component: {fileID: 3122373793604031459}
+  - component: {fileID: 7762956783617588935}
   - component: {fileID: 4844455361978774210}
   - component: {fileID: 5347832835052622598}
   m_Layer: 10
@@ -345,6 +346,24 @@ MonoBehaviour:
   _minorColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   _majorLinePixelSize: 1.5
   _minorLinePixelSize: 1
+--- !u!114 &7762956783617588935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725903672366209685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d8a6459eb3010b4f9751de03dca135a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _layerName: 
+  _mapPins:
+    _list: []
+  _isClusteringEnabled: 0
+  _clusterThreshold: 5
+  _clusterMapPinPrefab: {fileID: 0}
 --- !u!114 &4844455361978774210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,7 +415,7 @@ Transform:
   m_GameObject: {fileID: 4665505445303075231}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

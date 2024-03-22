@@ -29,23 +29,33 @@ public static class Extensions
         {
             return SoundType.VFX;
         }
-
-        return SoundType.BGM;
+        else
+        {
+            return SoundType.BGM;
+        }
     }
 
     public static Ray GetRay(this PointerEventData eventData)
     {
         RawImage rawImage = eventData.pointerEnter.GetComponent<RawImage>();
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition, null, out Vector2 localPoint);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, eventData.position, null, out Vector2 localPoint);
 
         return Camera.main.ScreenPointToRay(localPoint);
     }
 
-    public static IEnumerator GetRoute(this LatLon originLanLot, LatLon destinationLanLot)
+    public static IEnumerator GetRoute(this LatLon originLanLot, LatLon destinationLanLot, BingRouteMode routeMode)
     {
-        string bingUrl = "https://dev.virtualearth.net/REST/v1/Routes/Driving?o=json&wp.0=";
-        string url = $"{bingUrl}{originLanLot.LatitudeInDegrees},{originLanLot.LongitudeInDegrees}&wp.1={destinationLanLot.LatitudeInDegrees},{destinationLanLot.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}";
-        UnityWebRequest www = UnityWebRequest.Get(url);
+        UnityWebRequest www = default;
+
+        switch (routeMode)
+        {
+            case BingRouteMode.Walking:
+                www = UnityWebRequest.Get(BingMap.GetWalkingUrl(originLanLot, destinationLanLot));
+                break;
+            case BingRouteMode.Driving:
+                www = UnityWebRequest.Get(BingMap.GetDrivingUrl(originLanLot, destinationLanLot));
+                break;
+        }
 
         yield return www.SendWebRequest();
 

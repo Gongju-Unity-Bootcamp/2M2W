@@ -76,27 +76,10 @@ public class ArRoadViewPopup : UIPopup
                 Managers.App.MapController.PanEast();
                 break;
             case Buttons.CurrentPosIcon:
-                if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
-                {
-                    Managers.App.MapRenderer.Center = Managers.App.MapLocationService.GetLatLon();
-                }
-                else
-                {
-                    Managers.App.MapRenderer.Center = new LatLon(36.5212388346086, 127.172650559606);
-                }
+                Managers.App.MapRenderer.Center = Managers.App.LatLonAlt.LatLon;
                 break;
             case Buttons.NavModeIcon:
-                if (false == Managers.App.navMode)
-                {
-                    Managers.App.navMode = true;
-                    Managers.App.NavTile.ImageryType = MapImageryType.Symbolic;
-                    Managers.App.NavTile.ImageryStyle = MapImageryStyle.Vibrant;
-                }
-                else
-                {
-                    Managers.App.navMode = false;
-                    Managers.App.NavTile.ImageryType = MapImageryType.Aerial;
-                }
+                Managers.App.GetNavMode();
                 break;
             case Buttons.BackButton:
                 Managers.UI.ClosePopupUI();
