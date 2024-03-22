@@ -69,6 +69,12 @@ public class MapController : MonoBehaviour
                             Managers.App.MapController.Zoom(pinchAmount * Managers.App.polatedValue);
                             break;
                     }
+
+                    Managers.App.isPinch = true;
+                }
+                else
+                {
+                    Managers.App.isPinch = false;
                 }
             }
         }

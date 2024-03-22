@@ -1,4 +1,3 @@
-using Microsoft.Maps.Unity;
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,10 +6,6 @@ public class ArNavPopup : UIPopup
 {
     private enum Buttons
     {
-        Button_01, 
-        Button_02, 
-        Button_03,
-
         Button_01b,
         Button_02b,
         Button_03b,

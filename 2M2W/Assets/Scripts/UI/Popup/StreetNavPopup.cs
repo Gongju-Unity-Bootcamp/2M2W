@@ -18,10 +18,14 @@ public class StreetNavPopup : UIPopup
         Button
     }
 
+    private enum Texts
+    {
+        Text
+    }
+
     private enum InputFields
     {
-        InputField_01,
-        InputField_02
+        InputField
     }
 
     public override void Init()
@@ -35,6 +39,13 @@ public class StreetNavPopup : UIPopup
         {
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
+        }
+
+        foreach (Texts textIndex in Enum.GetValues(typeof(Texts)))
+        {
+            TMP_Text text = GetText((int)textIndex);
+            text.BindViewEvent(OnEnableText, ViewEvent.Click, this);
+            text.gameObject.SetActive(true);
         }
 
         foreach (InputFields inputFieldIndex in Enum.GetValues(typeof(InputFields)))
@@ -61,6 +72,11 @@ public class StreetNavPopup : UIPopup
         }
 
         Managers.Sound.Play(SoundID.ButtonClick);
+    }
+
+    private void OnEnableText(PointerEventData eventData)
+    {
+
     }
 
     private void OnClickInputField(PointerEventData eventData)

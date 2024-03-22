@@ -5,4 +5,8 @@ public enum ViewEvent
     EndDrag,
     Click,
     DoubleClick,
+#if UNITY_ANDROID
+    Enable,
+    Pinch
+#endif
 }

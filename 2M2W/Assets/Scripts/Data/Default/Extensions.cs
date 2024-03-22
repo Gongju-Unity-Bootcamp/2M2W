@@ -1,9 +1,13 @@
+using Microsoft.Geospatial;
 using UniRx;
+using System.Collections;
 using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
+using static System.Net.WebRequestMethods;
+using UnityEngine.Networking;
 
 public static class Extensions
 {
@@ -35,5 +39,24 @@ public static class Extensions
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, Input.mousePosition, null, out Vector2 localPoint);
 
         return Camera.main.ScreenPointToRay(localPoint);
+    }
+
+    public static IEnumerator GetRoute(this LatLon originLanLot, LatLon destinationLanLot)
+    {
+        string bingUrl = "https://dev.virtualearth.net/REST/v1/Routes/Driving?o=json&wp.0=";
+        string url = $"{bingUrl}{originLanLot.LatitudeInDegrees},{originLanLot.LongitudeInDegrees}&wp.1={destinationLanLot.LatitudeInDegrees},{destinationLanLot.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}";
+        UnityWebRequest www = UnityWebRequest.Get(url);
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.LogError("Error: " + www.error);
+        }
+        else
+        {
+            string response = www.downloadHandler.text;
+            Debug.Log("Response: " + response);
+        }
     }
 }
