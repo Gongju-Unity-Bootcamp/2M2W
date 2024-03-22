@@ -57,4 +57,17 @@ public class MapLocationService : MonoBehaviour
                 return true;
         }
     }
+
+    public LatLon GetLatLon()
+    {
+        switch (locationService.status)
+        {
+            case LocationServiceStatus.Stopped:
+            case LocationServiceStatus.Failed:
+            case LocationServiceStatus.Initializing:
+                return default;
+            default:
+                return new LatLon(locationService.lastData.latitude, locationService.lastData.longitude);
+        }
+    }
 }

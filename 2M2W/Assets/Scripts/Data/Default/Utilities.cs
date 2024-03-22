@@ -99,9 +99,6 @@ public class Utilities : MonoBehaviour
                  .Buffer(e.Throttle(TimeSpan.FromMilliseconds(200)))
                  .Where(buffer => buffer.Count >= 2).Subscribe(buffer => action.Invoke(buffer[0])).AddTo(component);
                 break;
-            case ViewEvent.Enable:
-                view.OnEnableAsObservable().Subscribe(_ => action.Invoke(null)).AddTo(component);
-                break;
             case ViewEvent.Pinch:
                 view.OnDragAsObservable()
                 .Where(_ => Input.touchCount <= 2 && Managers.App.isPinch)

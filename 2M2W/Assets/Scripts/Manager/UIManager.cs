@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 [RequireComponent(typeof(Canvas))]
@@ -8,6 +9,7 @@ public class UIManager
     private int currentCanvasOrder = -20;
     private Stack<UIPopup> popupStack;
     private GameObject UIRoot;
+    private UIPopup currentPopup;
 
     public void Init()
     {
@@ -36,6 +38,7 @@ public class UIManager
     {
         T popup = SetupUI<T>(parent);
 
+        currentPopup = popup;
         popupStack.Push(popup);
 
         return popup;
@@ -88,6 +91,8 @@ public class UIManager
 
         UIPopup popup = popupStack.Pop();
         Managers.Resource.Destroy(popup.gameObject);
+
+        currentPopup = popup;
         currentCanvasOrder -= 1;
     }
 
@@ -98,4 +103,7 @@ public class UIManager
             ClosePopupUI();
         }
     }
+
+    public UIPopup CurrentPopupUI()
+        => currentPopup;
 }

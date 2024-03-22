@@ -6,7 +6,7 @@ public class MapController : MonoBehaviour
     private float initialDistance;
     private float previousDistance;
 #endif
-    private const float maxZoom = 18.5f, minZoom = 12.5f;
+    private const float maxZoom = 18f, minZoom = 12f;
 
     private void Update()
     {

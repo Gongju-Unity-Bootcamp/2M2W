@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public static class Extensions
 {
@@ -38,24 +39,24 @@ public static class Extensions
     {
         RawImage rawImage = eventData.pointerEnter.GetComponent<RawImage>();
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, eventData.position, null, out Vector2 localPoint);
+        localPoint.x = (rawImage.rectTransform.rect.xMin * -1) - (localPoint.x * -1);
+        localPoint.y = (rawImage.rectTransform.rect.yMin * -1) - (localPoint.y * -1);
+        Vector2 viewportPoint = new Vector2(localPoint.x / rawImage.rectTransform.rect.size.x, localPoint.y / rawImage.rectTransform.rect.size.y);
 
-        Vector3 viewportPoint = rawImage.rectTransform.TransformPoint(localPoint) / Screen.height;
-        Vector2 textureCoord = new Vector2(viewportPoint.x * Managers.App.MapCamera.targetTexture.width, viewportPoint.y * Managers.App.MapCamera.targetTexture.height);
-
-        return Managers.App.MapCamera.ScreenPointToRay(textureCoord);
+        return Managers.App.MapCamera.ViewportPointToRay(new Vector3(viewportPoint.x, viewportPoint.y, 0));
     }
 
-    public static IEnumerator GetRoute(this LatLon originLanLot, LatLon destinationLanLot, BingRouteMode routeMode)
+    public static IEnumerator GetRoute(this LatLon originLatLon, LatLon destinationLatLon, Action<string> callback, BingRouteMode routeMode = BingRouteMode.Walking)
     {
         UnityWebRequest www = default;
 
         switch (routeMode)
         {
             case BingRouteMode.Walking:
-                www = UnityWebRequest.Get(BingMap.GetWalkingUrl(originLanLot, destinationLanLot));
+                www = UnityWebRequest.Get(BingMap.GetWalkingUrl(originLatLon, destinationLatLon));
                 break;
             case BingRouteMode.Driving:
-                www = UnityWebRequest.Get(BingMap.GetDrivingUrl(originLanLot, destinationLanLot));
+                www = UnityWebRequest.Get(BingMap.GetDrivingUrl(originLatLon, destinationLatLon));
                 break;
         }
 
@@ -63,12 +64,59 @@ public static class Extensions
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
-            Debug.LogError("Error: " + www.error);
+            callback(www.error);
         }
         else
         {
-            string response = www.downloadHandler.text;
-            Debug.Log("Response: " + response);
+            callback(www.downloadHandler.text);
+        }
+    }
+
+    public static IEnumerator GetLatLon(this string addressName, Action<string> callback)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(BingMap.GetLatLonUrl(addressName));
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        {
+            callback(www.error);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
+        }
+    }
+
+    public static IEnumerator GetAddress(this LatLon originLatLon, Action<string> callback)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(BingMap.GetAddressUrl(originLatLon));
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        {
+            callback(www.error);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
+        }
+    }
+
+    public static IEnumerator GetSearchAddress(this string addressName, Action<string> callback)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(BingMap.GetSearchAddressUrl(addressName));
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        {
+            callback(www.error);
+        }
+        else
+        {
+            callback(www.downloadHandler.text);
         }
     }
 }

@@ -6,7 +6,6 @@ public enum ViewEvent
     Click,
     DoubleClick,
 #if UNITY_ANDROID
-    Enable,
     Pinch
 #endif
 }

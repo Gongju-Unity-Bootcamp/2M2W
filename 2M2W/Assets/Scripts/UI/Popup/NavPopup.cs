@@ -84,7 +84,11 @@ public class NavPopup : UIPopup
                 Managers.App.MapController.PanEast();
                 break;
             case Buttons.CurrentPosIcon:
-                Managers.App.MapRenderer.Center = Managers.App.LatLonAlt.LatLon;
+                LatLon latlon = Managers.App.MapLocationService.GetLatLon();
+                if (latlon != default)
+                {
+                    Managers.App.MapRenderer.Center = latlon;
+                }
                 break;
             case Buttons.NavModeIcon:
                 Managers.App.GetNavMode();
@@ -125,12 +129,21 @@ public class NavPopup : UIPopup
         if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
         {
             LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
+            ObservableList<MapPin> mapPins = Managers.App.MapPinLayer.MapPins;
 
-            Debug.Log("Yes" + latLon);
-        }
-        else
-        {
-            Debug.Log("No");
+            foreach (MapPin pin in mapPins)
+            {
+                if (pin.Location.ApproximatelyEquals(latLon, 0.000004d))
+                {
+                    mapPins.Remove(pin);
+
+                    return;
+                }
+            }
+
+            MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
+            mapPin.Location = latLon;
+            mapPins.Add(mapPin);
         }
     }
 }

@@ -14,16 +14,17 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public MapRenderer MapRenderer;
     [HideInInspector] public MapInteractionController MapController;
     [HideInInspector] public MapLocationService MapLocationService;
-
     [HideInInspector] public MapPinLayer MapPinLayer;
-    [HideInInspector] public MapPin MapPin;
 
     [HideInInspector] public Camera MapCamera;
 
     [HideInInspector] public DefaultTextureTileLayer NavTile;
 
     [HideInInspector] public LocationServiceStatus LocationStatus;
-    [HideInInspector] public LatLonAlt LatLonAlt;
+    [HideInInspector] public BingRouteMode BingRouteMode;
+    [HideInInspector] public LatLonAlt latLonAlt;
+    [HideInInspector] public LatLon startLatLon, endLatLon;
+    [HideInInspector] public ItineraryItem[] itineraryItems;
 
     [HideInInspector] public float polatedValue;
     [HideInInspector] public bool navMode, mute, isPinch;
@@ -38,7 +39,6 @@ public class AppManager : MonoBehaviour
         MapRenderer = BingMap.GetComponent<MapRenderer>();
         MapController = BingMap.GetComponent<MapInteractionController>();
         MapLocationService = BingMap.GetComponent<MapLocationService>();
-
         MapPinLayer = BingMap.GetComponent<MapPinLayer>();
 
         MapCamera = BingMap.transform.Find("MapCamera").GetComponent<Camera>();
@@ -48,7 +48,11 @@ public class AppManager : MonoBehaviour
         if (MapLocationService.GetLocation(out LocationServiceStatus status, out double latitude, out double longitude, out double altitude))
         {
             LocationStatus = status;
-            LatLonAlt = new LatLonAlt(latitude, longitude, altitude);
+            latLonAlt = new LatLonAlt(latitude, longitude, altitude);
+        }
+        else
+        {
+            latLonAlt = default;
         }
 
         polatedValue = 0.025f;
@@ -66,10 +70,7 @@ public class AppManager : MonoBehaviour
             Managers.Sound.Play(SoundID.MainBGM);
         }
 
-        LatLon originLatLon = new LatLon(36.52151612344d, 127.1728302134d);
-        LatLon destinationLatLon = new LatLon(36.520442011234d, 127.17315941234d);
-
-        StartCoroutine(originLatLon.GetRoute(destinationLatLon, BingRouteMode.Walking));
+        StartCoroutine("32517 충청남도 공주시 의당전의로".GetLatLon(response => { Debug.Log(response); }));
     }
 
     public void GetNavMode()
