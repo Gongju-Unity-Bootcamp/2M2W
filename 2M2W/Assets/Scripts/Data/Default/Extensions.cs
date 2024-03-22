@@ -4,10 +4,9 @@ using System.Collections;
 using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine;
-using static System.Net.WebRequestMethods;
 using UnityEngine.Networking;
+using UnityEngine;
+using UnityEngine.UI;
 
 public static class Extensions
 {
@@ -40,7 +39,10 @@ public static class Extensions
         RawImage rawImage = eventData.pointerEnter.GetComponent<RawImage>();
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rawImage.rectTransform, eventData.position, null, out Vector2 localPoint);
 
-        return Camera.main.ScreenPointToRay(localPoint);
+        Vector3 viewportPoint = rawImage.rectTransform.TransformPoint(localPoint) / Screen.height;
+        Vector2 textureCoord = new Vector2(viewportPoint.x * Managers.App.MapCamera.targetTexture.width, viewportPoint.y * Managers.App.MapCamera.targetTexture.height);
+
+        return Managers.App.MapCamera.ScreenPointToRay(textureCoord);
     }
 
     public static IEnumerator GetRoute(this LatLon originLanLot, LatLon destinationLanLot, BingRouteMode routeMode)

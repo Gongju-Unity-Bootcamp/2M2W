@@ -122,15 +122,10 @@ public class NavPopup : UIPopup
 
     private void OnDoubleClickRawImage(PointerEventData eventData)
     {
-        //MapPin mapPin = Managers.App.MapPin;
-
         if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
         {
             LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
-            //mapPin = new MapPin();
-            //mapPin.gameObject.AddComponent<Image>().sprite = Managers.Resource.LoadSprite("spr_PopupIcon");
-            //mapPin.Location = latLon;
-            //Managers.App.MapPinLayer.MapPins.Add(mapPin);
+
             Debug.Log("Yes" + latLon);
         }
         else

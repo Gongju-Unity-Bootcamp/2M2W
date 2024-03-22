@@ -18,6 +18,8 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public MapPinLayer MapPinLayer;
     [HideInInspector] public MapPin MapPin;
 
+    [HideInInspector] public Camera MapCamera;
+
     [HideInInspector] public DefaultTextureTileLayer NavTile;
 
     [HideInInspector] public LocationServiceStatus LocationStatus;
@@ -38,6 +40,8 @@ public class AppManager : MonoBehaviour
         MapLocationService = BingMap.GetComponent<MapLocationService>();
 
         MapPinLayer = BingMap.GetComponent<MapPinLayer>();
+
+        MapCamera = BingMap.transform.Find("MapCamera").GetComponent<Camera>();
 
         NavTile = BingMap.GetComponent<DefaultTextureTileLayer>();
 
