@@ -1,12 +1,12 @@
 using Microsoft.Geospatial;
+using Microsoft.Maps.Unity;
 using System;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
-using Newtonsoft.Json;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.Maps.Unity;
+using System.Linq;
+using UnityEditor.Searcher;
 
 public class StreetNavPopup : UIPopup
 {
@@ -33,6 +33,7 @@ public class StreetNavPopup : UIPopup
         Button_03, 
         Button_04,
 
+        CurrentPosIcon,
         CancelButton,
 
         Button,
@@ -47,6 +48,7 @@ public class StreetNavPopup : UIPopup
     }
 
     private GameObject obj;
+    private Button searchButton;
     private TMP_Text text;
     private TMP_InputField input;
     private TMP_InputField[] inputs;
@@ -64,7 +66,8 @@ public class StreetNavPopup : UIPopup
         obj.SetActive(false);
         text = GetText((int)Texts.SearchText);
 
-        GetButton((int)Buttons.SearchButton).gameObject.SetActive(false);
+        searchButton = GetButton((int)Buttons.SearchButton);
+        searchButton.gameObject.SetActive(false);
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
@@ -80,15 +83,15 @@ public class StreetNavPopup : UIPopup
             inputField.onSelect.AddListener(_ =>
             {
                 input = inputField;
-        
+
                 if (false == string.IsNullOrEmpty(input.text))
                 {
                     text.text = input.text;
                 }
 
-                GetButton((int)Buttons.SearchButton).gameObject.SetActive(true);
+                searchButton.gameObject.SetActive(true);
             });
-            inputField.onValueChanged.AddListener(text => { OnChangedInputField(text); });
+            inputField.onValueChanged.AddListener(text => { OnChangedInputField(text, inputField); });
             inputs[(int)inputFieldIndex] = inputField;
             if (inputFieldIndex == 0)
             {
@@ -97,11 +100,6 @@ public class StreetNavPopup : UIPopup
 
                 StartCoroutine(latLon.GetAddress(response =>
                 {
-                    if (response == null)
-                    {
-                        return;
-                    }
-
                     LocationDetails json = JsonUtilities.JsonToObject<LocationDetails>(response);
 
                     foreach (ResourceLocationSet resourceSet in json.resourceSets)
@@ -131,15 +129,12 @@ public class StreetNavPopup : UIPopup
         switch (button)
         {
             case Buttons.SearchButton:
-                Button search = GetButton((int)button);
                 TMP_Text text = GetText((int)Texts.SearchText);
 
                 if (false == string.IsNullOrEmpty(text.text))
                 {
                     input.text = text.text;
                 }
-
-                search.gameObject.SetActive(false);
                 break;
             case Buttons.Button_01:
                 GetFindLocation(BingRouteMode.Driving);
@@ -153,17 +148,24 @@ public class StreetNavPopup : UIPopup
             case Buttons.Button_04:
                 GetFindLocation(BingRouteMode.Bicycling);
                 break;
+            case Buttons.CurrentPosIcon:
+                LatLon latlon = Managers.App.MapLocationService.GetLatLon();
+                if (latlon != default)
+                {
+                    Managers.App.MapRenderer.Center = latlon;
+                }
+                break;
             case Buttons.CancelButton:
                 Managers.UI.ClosePopupUI();
                 break;
             case Buttons.Button:
-                Utilities.SwapValue(ref Managers.App.startLatLon, ref Managers.App.endLatLon);
                 string str = inputs[0].text;
                 inputs[0].text = inputs[1].text;
                 inputs[1].text = str;
                 break;
             case Buttons.NavStart:
                 ObservableList<MapPin> mapPins = Managers.App.MapPinLayer.MapPins;
+                mapPins.Clear();
                 MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
                 startPin.Location = Managers.App.startLatLon;
                 mapPins.Add(startPin);
@@ -173,11 +175,12 @@ public class StreetNavPopup : UIPopup
                 break;
         }
 
+        searchButton.gameObject.SetActive(false);
         Managers.Sound.Play(SoundID.ButtonClick);
     }
 
-    private void OnChangedInputField(string addressName)
-        => GetRoute(addressName);
+    private void OnChangedInputField(string addressName, TMP_InputField inputField)
+        => GetRoute(addressName, inputField);
 
     private void GetFindLocation(BingRouteMode bingRouteMode)
     {
@@ -216,8 +219,10 @@ public class StreetNavPopup : UIPopup
         }, bingRouteMode));
     }
 
-    private void GetRoute(string str)
+    private void GetRoute(string str, TMP_InputField inputField)
     {
+        input = inputField;
+
         StartCoroutine(str.GetSearchAddress(response =>
         {
             LocationDetails json = JsonUtilities.JsonToObject<LocationDetails>(response);
@@ -232,7 +237,7 @@ public class StreetNavPopup : UIPopup
 
                         foreach (GeocodePoint geocode in resource.geocodePoints)
                         {
-                            if (input == inputs[0])
+                            if (inputField == inputs[0])
                             {
                                 Managers.App.startLatLon = new LatLon(geocode.coordinates[0], geocode.coordinates[1]);
                             }

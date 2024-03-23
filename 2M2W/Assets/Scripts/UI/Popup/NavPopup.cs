@@ -22,8 +22,8 @@ public class NavPopup : UIPopup
         Button_Left,
         Button_Right,
 
-        CurrentPosIcon,
         NavModeIcon,
+        CurrentPosIcon,
         EnlargementIcon,
 
         Button_01, 
@@ -83,15 +83,15 @@ public class NavPopup : UIPopup
             case Buttons.Button_Right:
                 Managers.App.MapController.PanEast();
                 break;
+            case Buttons.NavModeIcon:
+                Managers.App.GetNavMode();
+                break;
             case Buttons.CurrentPosIcon:
                 LatLon latlon = Managers.App.MapLocationService.GetLatLon();
                 if (latlon != default)
                 {
                     Managers.App.MapRenderer.Center = latlon;
                 }
-                break;
-            case Buttons.NavModeIcon:
-                Managers.App.GetNavMode();
                 break;
             case Buttons.EnlargementIcon:
                 Managers.UI.OpenPopup<StreetNavPopup>();
