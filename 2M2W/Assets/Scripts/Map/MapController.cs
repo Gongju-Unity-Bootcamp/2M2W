@@ -1,3 +1,4 @@
+using Microsoft.Geospatial;
 using UnityEngine;
 
 public class MapController : MonoBehaviour
@@ -6,7 +7,7 @@ public class MapController : MonoBehaviour
     private float initialDistance;
     private float previousDistance;
 #endif
-    private const float maxZoom = 18f, minZoom = 12f;
+    private const float maxZoom = 18f, minZoom = 10f;
 
     private void Update()
     {
