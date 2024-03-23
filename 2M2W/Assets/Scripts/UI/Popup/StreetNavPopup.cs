@@ -174,7 +174,7 @@ public class StreetNavPopup : UIPopup
                 MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
                 endPin.Location = Managers.App.endLatLon;
                 mapPins.Add(endPin);
-                Managers.App.MapRenderer.Center = Managers.App.startLatLon;
+                Managers.App.MapRenderer.Center = startPin.Location;
                 GetRenderRoute();
                 break;
         }
@@ -263,6 +263,8 @@ public class StreetNavPopup : UIPopup
 
     private void GetRenderRoute()
     {
+        Managers.App.MapLineRenderer.gameObject.SetActive(false);
+
         ObservableList<MapPin> mapPins = Managers.App.MapPinSubLayer.MapPins;
 
         foreach (ItineraryItem itineraryItem in Managers.App.itineraryItems)
@@ -275,5 +277,6 @@ public class StreetNavPopup : UIPopup
         }
 
         Managers.App.MapLineRenderer.gameObject.SetActive(true);
+        Managers.App.MapRenderer.ZoomLevel = 1f;
     }
 }
