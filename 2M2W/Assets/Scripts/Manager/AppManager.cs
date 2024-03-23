@@ -14,8 +14,7 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public MapRenderer MapRenderer;
     [HideInInspector] public MapInteractionController MapController;
     [HideInInspector] public MapLocationService MapLocationService;
-    [HideInInspector] public MapPinLayer MapPinLayer;
-    [HideInInspector] public MapPinLayer MapPinSubLayer;
+    [HideInInspector] public MapPinLayer MapPinLayer, MapPinSubLayer, PopupPinLayer, RefPinLayer;
     [HideInInspector] public MapLineRenderer MapLineRenderer;
 
     [HideInInspector] public Camera MapCamera;
@@ -42,8 +41,14 @@ public class AppManager : MonoBehaviour
         MapLocationService = BingMap.GetComponent<MapLocationService>();
         MapPinLayer = BingMap.GetComponent<MapPinLayer>();
         MapPinSubLayer = BingMap.AddComponent<MapPinLayer>();
+        PopupPinLayer = BingMap.AddComponent<MapPinLayer>();
+        RefPinLayer = BingMap.AddComponent<MapPinLayer>();
         MapLineRenderer = Managers.Resource.Instantiate("MapLineRenderer").GetComponent<MapLineRenderer>();
 
+        MapPinLayer.LayerName = nameof(MapPinLayer);
+        MapPinSubLayer.LayerName = nameof(MapPinSubLayer);
+        PopupPinLayer.LayerName = nameof(PopupPinLayer);
+        RefPinLayer.LayerName = nameof(RefPinLayer);
         MapLineRenderer.gameObject.SetActive(false);
         MapCamera = BingMap.transform.Find("MapCamera").GetComponent<Camera>();
 

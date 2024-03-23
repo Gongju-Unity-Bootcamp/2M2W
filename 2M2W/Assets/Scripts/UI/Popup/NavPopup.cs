@@ -129,7 +129,7 @@ public class NavPopup : UIPopup
         if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
         {
             LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
-            ObservableList<MapPin> mapPins = Managers.App.MapPinLayer.MapPins;
+            ObservableList<MapPin> mapPins = Managers.App.PopupPinLayer.MapPins;
 
             if (mapPins.Count > 0)
             {

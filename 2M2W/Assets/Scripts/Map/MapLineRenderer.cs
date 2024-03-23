@@ -22,26 +22,15 @@ public class MapLineRenderer : MonoBehaviour
     }
 
     private void OnEnable()
-        => Managers.App.MapRenderer.ZoomLevel = 1f;
+        => lineRenderer.positionCount = mapPins.Count;
 
     private void Update()
     {
         if (mapPins.Count > 0)
         {
-            int activeMapPinCount = 0;
-
             for (int index = 0; index < mapPins.Count; ++index)
             {
-                if (mapPins[index].enabled)
-                {
-                    if (activeMapPinCount >= lineRenderer.positionCount)
-                    {
-                        ++lineRenderer.positionCount;
-                    }
-
-                    lineRenderer.SetPosition(activeMapPinCount, new Vector3(mapPins[index].transform.position.x, 20f, mapPins[index].transform.position.z));
-                    ++activeMapPinCount;
-                }
+                lineRenderer.SetPosition(index, new Vector3(mapPins[index].transform.position.x, 20f, mapPins[index].transform.position.z));
             }
         }
     }
