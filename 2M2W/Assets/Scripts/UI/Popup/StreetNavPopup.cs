@@ -5,8 +5,6 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
-using System.Linq;
-using UnityEditor.Searcher;
 
 public class StreetNavPopup : UIPopup
 {
@@ -52,6 +50,7 @@ public class StreetNavPopup : UIPopup
     private TMP_Text text;
     private TMP_InputField input;
     private TMP_InputField[] inputs;
+    private ObservableList<MapPin> mapPins;
 
     public override void Init()
     {
@@ -83,11 +82,8 @@ public class StreetNavPopup : UIPopup
             inputField.onSelect.AddListener(_ =>
             {
                 input = inputField;
-
-                if (false == string.IsNullOrEmpty(input.text))
-                {
-                    text.text = input.text;
-                }
+                text.text = input.text;
+                OnChangedInputField(text.text, inputField);
 
                 searchButton.gameObject.SetActive(true);
             });
@@ -108,6 +104,8 @@ public class StreetNavPopup : UIPopup
                         {
                             if (false == string.IsNullOrEmpty(resource.address.formattedAddress))
                             {
+                                input = inputField;
+                                text.text = string.Empty;
                                 inputField.text = resource.address.formattedAddress;
                             }
                         }
@@ -115,6 +113,8 @@ public class StreetNavPopup : UIPopup
                 }));
             }
         }
+
+        mapPins = Managers.App.MapPinLayer.MapPins;
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -126,6 +126,8 @@ public class StreetNavPopup : UIPopup
 
     private void ProcessButton(Buttons button)
     {
+        mapPins.Clear();
+
         switch (button)
         {
             case Buttons.SearchButton:
@@ -164,8 +166,6 @@ public class StreetNavPopup : UIPopup
                 inputs[1].text = str;
                 break;
             case Buttons.NavStart:
-                ObservableList<MapPin> mapPins = Managers.App.MapPinLayer.MapPins;
-                mapPins.Clear();
                 MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
                 startPin.Location = Managers.App.startLatLon;
                 mapPins.Add(startPin);
@@ -196,6 +196,11 @@ public class StreetNavPopup : UIPopup
 
         StartCoroutine(Managers.App.startLatLon.GetRoute(Managers.App.endLatLon, response =>
         {
+            if (Managers.App.startLatLon == Managers.App.endLatLon)
+            {
+                return;
+            }
+
             RouteDetails json = JsonUtilities.JsonToObject<RouteDetails>(response);
 
             foreach (ResourceRouteSet resourceSet in json.resourceSets)
