@@ -166,6 +166,7 @@ public class StreetNavPopup : UIPopup
                 string str = inputs[0].text;
                 inputs[0].text = inputs[1].text;
                 inputs[1].text = str;
+                obj.SetActive(false);
                 break;
             case Buttons.NavStart:
                 MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
