@@ -19,10 +19,10 @@ public static class BingMap
         => $"{url}Routes/Walking?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}&c=ko-KR";
 
     public static string GetTransitUrl(LatLon originLatLon, LatLon destinationLatLon)
-        => $"{url}Routes/Transit?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}";
+        => $"{url}Routes/Transit?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}&c=ko-KR";
 
     public static string GetBicyclingUrl(LatLon originLatLon, LatLon destinationLatLon)
-    => $"{url}Routes/Bicycling?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}";
+    => $"{url}Routes/Bicycling?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}&c=ko-KR";
 
     public static string GetLatLonUrl(string addressName)
         => $"{url}Locations/{addressName}?o=json&key={Managers.App.MapSession.DeveloperKey}&c=ko-KR";

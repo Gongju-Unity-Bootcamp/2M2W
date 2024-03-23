@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 1050288760}
   - component: {fileID: 1050288759}
   - component: {fileID: 1050288762}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -507,7 +507,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1073742880
+    m_Bits: 1073742944
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

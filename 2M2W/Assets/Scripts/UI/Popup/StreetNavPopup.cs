@@ -127,6 +127,8 @@ public class StreetNavPopup : UIPopup
     private void ProcessButton(Buttons button)
     {
         mapPins.Clear();
+        Managers.App.MapPinSubLayer.MapPins.Clear();
+        Managers.App.MapLineRenderer.gameObject.SetActive(false);
 
         switch (button)
         {
@@ -172,6 +174,8 @@ public class StreetNavPopup : UIPopup
                 MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
                 endPin.Location = Managers.App.endLatLon;
                 mapPins.Add(endPin);
+                Managers.App.MapRenderer.Center = Managers.App.startLatLon;
+                GetRenderRoute();
                 break;
         }
 
@@ -255,5 +259,21 @@ public class StreetNavPopup : UIPopup
                 }
             }
         }));
+    }
+
+    private void GetRenderRoute()
+    {
+        ObservableList<MapPin> mapPins = Managers.App.MapPinSubLayer.MapPins;
+
+        foreach (ItineraryItem itineraryItem in Managers.App.itineraryItems)
+        {
+            LatLon latLon = new LatLon(itineraryItem.maneuverPoint.coordinates[0], itineraryItem.maneuverPoint.coordinates[1]);
+            MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
+            mapPin.transform.Find("Root").gameObject.SetActive(false);
+            mapPin.Location = latLon;
+            mapPins.Add(mapPin);
+        }
+
+        Managers.App.MapLineRenderer.gameObject.SetActive(true);
     }
 }
