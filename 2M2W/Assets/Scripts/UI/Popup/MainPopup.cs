@@ -2,7 +2,6 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
-using Microsoft.Maps.Unity;
 
 public class MainPopup : UIPopup
 {

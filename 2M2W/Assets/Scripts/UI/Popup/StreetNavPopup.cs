@@ -3,6 +3,10 @@ using System;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine;
+using Newtonsoft.Json;
+using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Maps.Unity;
 
 public class StreetNavPopup : UIPopup
 {
@@ -13,7 +17,8 @@ public class StreetNavPopup : UIPopup
 
     private enum Texts
     {
-        Search,
+        SearchText,
+
         Text_01,
         Text_02,
         Text_03
@@ -21,6 +26,8 @@ public class StreetNavPopup : UIPopup
 
     private enum Buttons
     {
+        SearchButton,
+
         Button_01,
         Button_02, 
         Button_03, 
@@ -28,7 +35,9 @@ public class StreetNavPopup : UIPopup
 
         CancelButton,
 
-        Button
+        Button,
+
+        NavStart
     }
 
     private enum InputFields
@@ -37,6 +46,7 @@ public class StreetNavPopup : UIPopup
         InputField_02
     }
 
+    private GameObject obj;
     private TMP_Text text;
     private TMP_InputField input;
     private TMP_InputField[] inputs;
@@ -50,10 +60,11 @@ public class StreetNavPopup : UIPopup
         BindButton(typeof(Buttons));
         BindInputField(typeof(InputFields));
 
-        GetObject((int)Objects.TextNav).gameObject.SetActive(false);
+        obj = GetObject((int)Objects.TextNav);
+        obj.SetActive(false);
+        text = GetText((int)Texts.SearchText);
 
-        text = GetText((int)Texts.Search);
-        text.BindViewEvent(OnClickText, ViewEvent.Click, this);
+        GetButton((int)Buttons.SearchButton).gameObject.SetActive(false);
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
@@ -66,7 +77,18 @@ public class StreetNavPopup : UIPopup
         foreach (InputFields inputFieldIndex in Enum.GetValues(typeof(InputFields)))
         {
             TMP_InputField inputField = GetInputField((int)inputFieldIndex);
-            inputField.onValueChanged.AddListener(text => { OnChangedInputField(text, inputField); });
+            inputField.onSelect.AddListener(_ =>
+            {
+                input = inputField;
+        
+                if (false == string.IsNullOrEmpty(input.text))
+                {
+                    text.text = input.text;
+                }
+
+                GetButton((int)Buttons.SearchButton).gameObject.SetActive(true);
+            });
+            inputField.onValueChanged.AddListener(text => { OnChangedInputField(text); });
             inputs[(int)inputFieldIndex] = inputField;
             if (inputFieldIndex == 0)
             {
@@ -86,22 +108,14 @@ public class StreetNavPopup : UIPopup
                     {
                         foreach (ResourceLocation resource in resourceSet.resources)
                         {
-                            inputField.text = resource.address.formattedAddress;
+                            if (false == string.IsNullOrEmpty(resource.address.formattedAddress))
+                            {
+                                inputField.text = resource.address.formattedAddress;
+                            }
                         }
                     }
                 }));
             }
-        }
-    }
-
-    private void OnClickText(PointerEventData eventData)
-    {
-        Texts textIndex = Enum.Parse<Texts>(eventData.pointerEnter.name);
-        TMP_Text text = GetText((int)textIndex);
-
-        if (input != null)
-        {
-            input.text = text.text;
         }
     }
 
@@ -116,30 +130,95 @@ public class StreetNavPopup : UIPopup
     {
         switch (button)
         {
+            case Buttons.SearchButton:
+                Button search = GetButton((int)button);
+                TMP_Text text = GetText((int)Texts.SearchText);
+
+                if (false == string.IsNullOrEmpty(text.text))
+                {
+                    input.text = text.text;
+                }
+
+                search.gameObject.SetActive(false);
+                break;
             case Buttons.Button_01:
-                Managers.App.BingRouteMode = BingRouteMode.Driving;
-                GetFindLocation();
+                GetFindLocation(BingRouteMode.Driving);
                 break;
             case Buttons.Button_02:
-                Managers.App.BingRouteMode = BingRouteMode.Walking;
-                GetFindLocation();
+                GetFindLocation(BingRouteMode.Walking);
+                break;
+            case Buttons.Button_03:
+                GetFindLocation(BingRouteMode.Transit);
+                break;
+            case Buttons.Button_04:
+                GetFindLocation(BingRouteMode.Bicycling);
                 break;
             case Buttons.CancelButton:
                 Managers.UI.ClosePopupUI();
                 break;
             case Buttons.Button:
-                GetFindLocation();
+                Utilities.SwapValue(ref Managers.App.startLatLon, ref Managers.App.endLatLon);
+                string str = inputs[0].text;
+                inputs[0].text = inputs[1].text;
+                inputs[1].text = str;
+                break;
+            case Buttons.NavStart:
+                ObservableList<MapPin> mapPins = Managers.App.MapPinLayer.MapPins;
+                MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
+                startPin.Location = Managers.App.startLatLon;
+                mapPins.Add(startPin);
+                MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
+                endPin.Location = Managers.App.endLatLon;
+                mapPins.Add(endPin);
                 break;
         }
 
         Managers.Sound.Play(SoundID.ButtonClick);
     }
 
-    private void OnChangedInputField(string addressName, TMP_InputField inputField)
-    {
-        input = inputField;
+    private void OnChangedInputField(string addressName)
+        => GetRoute(addressName);
 
-        StartCoroutine(addressName.GetSearchAddress(response =>
+    private void GetFindLocation(BingRouteMode bingRouteMode)
+    {
+        obj.SetActive(false);
+
+        foreach (TMP_InputField inputField in inputs)
+        {
+            if (true == string.IsNullOrEmpty(inputField.text))
+            {
+                return;
+            }
+        }
+
+        StartCoroutine(Managers.App.startLatLon.GetRoute(Managers.App.endLatLon, response =>
+        {
+            RouteDetails json = JsonUtilities.JsonToObject<RouteDetails>(response);
+
+            foreach (ResourceRouteSet resourceSet in json.resourceSets)
+            {
+                foreach (ResourceRoute resourceRoute in resourceSet.resources)
+                {
+                    foreach (RouteLeg routeLeg in resourceRoute.routeLegs)
+                    {
+                        if (false == string.IsNullOrEmpty(routeLeg.travelMode))
+                        {
+                            GetText((int)Texts.Text_01).text = $"{routeLeg.travelDuration} {resourceRoute.durationUnit}";
+                            GetText((int)Texts.Text_02).text = $"{routeLeg.travelDistance} {resourceRoute.distanceUnit}";
+                            GetText((int)Texts.Text_03).text = $"{routeLeg.travelMode}";
+                            obj.SetActive(true);
+
+                            Managers.App.itineraryItems = routeLeg.itineraryItems;
+                        }
+                    }
+                }
+            }
+        }, bingRouteMode));
+    }
+
+    private void GetRoute(string str)
+    {
+        StartCoroutine(str.GetSearchAddress(response =>
         {
             LocationDetails json = JsonUtilities.JsonToObject<LocationDetails>(response);
 
@@ -166,39 +245,5 @@ public class StreetNavPopup : UIPopup
                 }
             }
         }));
-    }
-
-    private void GetFindLocation()
-    {
-        GetObject((int)Objects.TextNav).gameObject.SetActive(false);
-
-        foreach (TMP_InputField inputField in inputs)
-        {
-            if (string.IsNullOrEmpty(inputField.text))
-            {
-                return;
-            }
-        }
-
-        StartCoroutine(Managers.App.startLatLon.GetRoute(Managers.App.endLatLon, response =>
-        {
-            RouteDetails json = JsonUtilities.JsonToObject<RouteDetails>(response);
-
-            foreach (ResourceRouteSet resourceSet in json.resourceSets)
-            {
-                foreach (ResourceRoute resourceRoute in resourceSet.resources)
-                {
-                    foreach (RouteLeg routeLeg in resourceRoute.routeLegs)
-                    {
-                        GetText((int)Texts.Text_01).text = $"{routeLeg.travelDuration} {resourceRoute.durationUnit}";
-                        GetText((int)Texts.Text_02).text = $"{routeLeg.travelDistance} {resourceRoute.distanceUnit}";
-                        GetText((int)Texts.Text_03).text = $"{routeLeg.travelMode}";
-                        GetObject((int)Objects.TextNav).gameObject.SetActive(true);
-
-                        Managers.App.itineraryItems = routeLeg.itineraryItems;
-                    }
-                }
-            }
-        }, Managers.App.BingRouteMode));
     }
 }

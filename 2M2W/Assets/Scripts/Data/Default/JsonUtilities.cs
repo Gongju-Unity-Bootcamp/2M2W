@@ -2,14 +2,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using System.IO;
+using UnityEngine.XR.Interaction.Toolkit.AffordanceSystem.Theme.Primitives;
+using System;
 
 public static class JsonUtilities
 {
     public static string ObjectToJson(object o)
-    => JsonConvert.SerializeObject(o);
+        => JsonConvert.SerializeObject(o);
+
 
     public static T JsonToObject<T>(string json)
         => JsonConvert.DeserializeObject<T>(json);
+
 
     public static void CreateJsonFile(string path, string name, string json)
     {

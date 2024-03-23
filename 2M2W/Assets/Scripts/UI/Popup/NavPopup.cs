@@ -131,19 +131,16 @@ public class NavPopup : UIPopup
             LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
             ObservableList<MapPin> mapPins = Managers.App.MapPinLayer.MapPins;
 
-            foreach (MapPin pin in mapPins)
+            if (mapPins.Count > 0)
             {
-                if (pin.Location.ApproximatelyEquals(latLon, 0.000004d))
-                {
-                    mapPins.Remove(pin);
-
-                    return;
-                }
+                mapPins.Clear();
             }
-
-            MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
-            mapPin.Location = latLon;
-            mapPins.Add(mapPin);
+            else
+            {
+                MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
+                mapPin.Location = latLon;
+                mapPins.Add(mapPin);
+            }
         }
     }
 }

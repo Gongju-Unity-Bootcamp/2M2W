@@ -58,6 +58,12 @@ public static class Extensions
             case BingRouteMode.Driving:
                 www = UnityWebRequest.Get(BingMap.GetDrivingUrl(originLatLon, destinationLatLon));
                 break;
+            case BingRouteMode.Transit:
+                www = UnityWebRequest.Get(BingMap.GetTransitUrl(originLatLon, destinationLatLon));
+                break;
+            case BingRouteMode.Bicycling:
+                www = UnityWebRequest.Get(BingMap.GetBicyclingUrl(originLatLon, destinationLatLon));
+                break;
         }
 
         yield return www.SendWebRequest();

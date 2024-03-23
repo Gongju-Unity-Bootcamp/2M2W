@@ -110,4 +110,11 @@ public class Utilities : MonoBehaviour
 
     public static void BindModelEvent<T>(ReactiveProperty<T> model, Action<T> action, Component component)
        => model.Subscribe(action).AddTo(component);
+
+    public static void SwapValue<T>(ref T origin, ref T last)
+    {
+        T temp = origin;
+        origin = last;
+        last = temp;
+    }
 }

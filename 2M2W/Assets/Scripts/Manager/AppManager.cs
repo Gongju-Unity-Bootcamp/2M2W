@@ -21,7 +21,6 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public DefaultTextureTileLayer NavTile;
 
     [HideInInspector] public LocationServiceStatus LocationStatus;
-    [HideInInspector] public BingRouteMode BingRouteMode;
     [HideInInspector] public LatLonAlt latLonAlt;
     [HideInInspector] public LatLon startLatLon, endLatLon;
     [HideInInspector] public ItineraryItem[] itineraryItems;
@@ -69,8 +68,6 @@ public class AppManager : MonoBehaviour
             Managers.UI.OpenPopup<MainPopup>();
             Managers.Sound.Play(SoundID.MainBGM);
         }
-
-        StartCoroutine("32517 충청남도 공주시 의당전의로".GetLatLon(response => { Debug.Log(response); }));
     }
 
     public void GetNavMode()

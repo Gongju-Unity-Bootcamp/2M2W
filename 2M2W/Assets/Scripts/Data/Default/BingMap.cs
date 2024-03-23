@@ -3,7 +3,9 @@ using Microsoft.Geospatial;
 public enum BingRouteMode
 {
     Walking,
-    Driving
+    Driving,
+    Transit,
+    Bicycling
 }
 
 public static class BingMap
@@ -15,7 +17,13 @@ public static class BingMap
     
     public static string GetWalkingUrl(LatLon originLatLon, LatLon destinationLatLon)
         => $"{url}Routes/Walking?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}&c=ko-KR";
-    
+
+    public static string GetTransitUrl(LatLon originLatLon, LatLon destinationLatLon)
+        => $"{url}Routes/Transit?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}";
+
+    public static string GetBicyclingUrl(LatLon originLatLon, LatLon destinationLatLon)
+    => $"{url}Routes/Bicycling?o=json&wp.0={originLatLon.LatitudeInDegrees},{originLatLon.LongitudeInDegrees}&wp.1={destinationLatLon.LatitudeInDegrees},{destinationLatLon.LongitudeInDegrees}&key={Managers.App.MapSession.DeveloperKey}";
+
     public static string GetLatLonUrl(string addressName)
         => $"{url}Locations/{addressName}?o=json&key={Managers.App.MapSession.DeveloperKey}&c=ko-KR";
 
