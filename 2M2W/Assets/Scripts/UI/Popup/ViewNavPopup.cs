@@ -110,12 +110,6 @@ public class ViewNavPopup : UIPopup
             case Buttons.NavModeIcon:
                 Managers.App.SetNavMode();
                 break;
-            case Buttons.PlusIcon:
-                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
-                break;
-            case Buttons.MinusIcon:
-                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
-                break;
             case Buttons.CancelButton:
                 Managers.App.MapPinLayer.MapPins.Clear();
                 Managers.App.MapPinSubLayer.MapPins.Clear();
