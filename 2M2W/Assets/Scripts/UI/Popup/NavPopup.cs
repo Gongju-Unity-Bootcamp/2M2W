@@ -17,6 +17,8 @@ public class NavPopup : UIPopup
         NavModeIcon,
         CurrentPosIcon,
         EnlargementIcon,
+        PlusIcon,
+        MinusIcon,
 
         Button_01, 
         Button_02, 
@@ -76,6 +78,12 @@ public class NavPopup : UIPopup
                 break;
             case Buttons.EnlargementIcon:
                 Managers.UI.OpenPopup<StreetNavPopup>();
+                break;
+            case Buttons.PlusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
+                break;
+            case Buttons.MinusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
                 break;
             case Buttons.Button_01:
                 Managers.App.EnableMarkerPin(0);

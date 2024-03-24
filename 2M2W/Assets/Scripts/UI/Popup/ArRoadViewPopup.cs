@@ -16,6 +16,8 @@ public class ArRoadViewPopup : UIPopup
     {
         CurrentPosIcon,
         NavModeIcon,
+        PlusIcon,
+        MinusIcon,
 
         Button_01,
         Button_02,
@@ -71,6 +73,12 @@ public class ArRoadViewPopup : UIPopup
                 break;
             case Buttons.NavModeIcon:
                 Managers.App.SetNavMode();
+                break;
+            case Buttons.PlusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
+                break;
+            case Buttons.MinusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
                 break;
             case Buttons.Button_01:
                 Managers.App.EnableMarkerPin(0);

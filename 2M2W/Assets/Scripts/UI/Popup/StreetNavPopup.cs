@@ -38,6 +38,8 @@ public class StreetNavPopup : UIPopup
 
         NavModeIcon,
         CurrentPosIcon,
+        PlusIcon,
+        MinusIcon,
         CancelButton,
 
         Button,
@@ -176,6 +178,12 @@ public class StreetNavPopup : UIPopup
                 {
                     Managers.App.MapRenderer.Center = latLon;
                 }
+                break;
+            case Buttons.PlusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
+                break;
+            case Buttons.MinusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
                 break;
             case Buttons.CancelButton:
                 Managers.UI.ClosePopupUI();

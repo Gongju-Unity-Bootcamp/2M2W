@@ -76,6 +76,8 @@ public class NavDetailsPopup : UIPopup
             }
         }, BingRouteMode.Walking));
 
+        Managers.App.BingRouteMode = BingRouteMode.Walking;
+
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
             Button button = GetButton((int)buttonIndex);
