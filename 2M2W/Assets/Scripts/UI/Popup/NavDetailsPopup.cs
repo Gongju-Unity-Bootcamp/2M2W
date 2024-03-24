@@ -45,17 +45,12 @@ public class NavDetailsPopup : UIPopup
         BindText(typeof(Texts));
 
         GetImage((int)Images.MaskImage).sprite = Managers.Resource.LoadSprite(Managers.App.MarkerData.Path);
-        SetDetailTexts();
-
-        foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
-        {
-            Button button = GetButton((int)buttonIndex);
-            button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
-        }
 
         mapPins = Managers.App.MapPinLayer.MapPins;
         Managers.App.startLatLon = Managers.App.MapLocationService.GetLatLon();
-        Managers.App.endLatLon = new LatLon(Managers.App.MarkerData.Latitude, Managers.App.MarkerData.Longitude);
+        endLatLon = new LatLon(Managers.App.MarkerData.Latitude, Managers.App.MarkerData.Longitude);
+        Managers.App.endLatLon = endLatLon;
+        SetDetailTexts();
 
         StartCoroutine(Managers.App.startLatLon.GetRoute(Managers.App.endLatLon, response =>
         {
@@ -80,6 +75,12 @@ public class NavDetailsPopup : UIPopup
                 }
             }
         }, BingRouteMode.Walking));
+
+        foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
+        {
+            Button button = GetButton((int)buttonIndex);
+            button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
+        }
     }
 
     private void OnClickButton(PointerEventData eventData)
