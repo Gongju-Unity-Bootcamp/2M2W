@@ -2,8 +2,8 @@ using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine;
 
 public class AppManager : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public MapRenderer MapRenderer;
     [HideInInspector] public MapInteractionController MapController;
     [HideInInspector] public MapLocationService MapLocationService;
-    [HideInInspector] public MapPinLayer MapPinLayer, MapPinSubLayer, PopupPinLayer, RefPinLayer;
+    [HideInInspector] public MapPinLayer MapPinLayer, MapPinSubLayer, PopupPinLayer, MarkerPinLayer;
     [HideInInspector] public MapLineRenderer MapLineRenderer;
 
     [HideInInspector] public Camera MapCamera;
@@ -25,6 +25,7 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public LatLonAlt latLonAlt;
     [HideInInspector] public LatLon startLatLon, endLatLon;
     [HideInInspector] public ItineraryItem[] itineraryItems;
+    [HideInInspector] public MarkerData MarkerData;
 
     [HideInInspector] public float polatedValue;
     [HideInInspector] public bool navMode, mute, isPinch;
@@ -42,13 +43,14 @@ public class AppManager : MonoBehaviour
         MapPinLayer = BingMap.GetComponent<MapPinLayer>();
         MapPinSubLayer = BingMap.AddComponent<MapPinLayer>();
         PopupPinLayer = BingMap.AddComponent<MapPinLayer>();
-        RefPinLayer = BingMap.AddComponent<MapPinLayer>();
+        MarkerPinLayer = BingMap.AddComponent<MapPinLayer>();
         MapLineRenderer = Managers.Resource.Instantiate("MapLineRenderer").GetComponent<MapLineRenderer>();
 
         MapPinLayer.LayerName = nameof(MapPinLayer);
         MapPinSubLayer.LayerName = nameof(MapPinSubLayer);
         PopupPinLayer.LayerName = nameof(PopupPinLayer);
-        RefPinLayer.LayerName = nameof(RefPinLayer);
+        MarkerPinLayer.LayerName = nameof(MarkerPinLayer);
+
         MapLineRenderer.gameObject.SetActive(false);
         MapCamera = BingMap.transform.Find("MapCamera").GetComponent<Camera>();
 
@@ -78,9 +80,12 @@ public class AppManager : MonoBehaviour
             Managers.UI.OpenPopup<MainPopup>();
             Managers.Sound.Play(SoundID.MainBGM);
         }
+
+        SetNavMode();
+        SetMapMarker(0);
     }
 
-    public void GetNavMode()
+    public void SetNavMode()
     {
         if (false == navMode)
         {
@@ -93,6 +98,38 @@ public class AppManager : MonoBehaviour
             navMode = false;
             NavTile.ImageryType = MapImageryType.Aerial;
         }
+    }
+
+    public void SetMapMarker(int index)
+    {
+        foreach (MarkerData marker in Managers.Data.Marker.Values)
+        {
+            if (index == 0)
+            {
+                MapPin mapPin = Managers.Resource.Instantiate("MarkerPin").GetComponent<MapPin>();
+                mapPin.gameObject.GetComponent<MapMarkerPinController>().SetMarkerPin(marker);
+                mapPin.Location = new LatLon(marker.Latitude, marker.Longitude);
+                mapPin.IsLayerSynchronized = false;
+                MarkerPinLayer.MapPins.Add(mapPin);
+            }
+            else
+            {
+                if (index == marker.Group)
+                {
+                    MapPin mapPin = Managers.Resource.Instantiate("MarkerPin").GetComponent<MapPin>();
+                    mapPin.gameObject.GetComponent<MapMarkerPinController>().SetMarkerPin(marker);
+                    mapPin.Location = new LatLon(marker.Latitude, marker.Longitude);
+                    mapPin.IsLayerSynchronized = false;
+                    MarkerPinLayer.MapPins.Add(mapPin);
+                }
+            }
+        }
+    }
+
+    public void EnableMarkerPin(int index)
+    {
+        MarkerPinLayer.MapPins.Clear();
+        SetMapMarker(index);
     }
 
     private void OnDestroy()

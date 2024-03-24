@@ -4,6 +4,7 @@ using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Utilities : MonoBehaviour
 {
@@ -116,5 +117,77 @@ public class Utilities : MonoBehaviour
         T temp = origin;
         origin = last;
         last = temp;
+    }
+
+    public static string ConvertToSecondsToTime(int seconds)
+    {
+        if (seconds == 0)
+        {
+            return "0초";
+        }
+
+        int hours = seconds / 3600;
+        int remainingMinutes = (seconds % 3600);
+        int minutes = remainingMinutes / 60;
+        int remainingSecondsOutput = remainingMinutes % 60;
+
+        string timeString = "";
+
+        if (hours > 0)
+        {
+            timeString += $"{hours:D2}시간 ";
+        }
+
+        if (minutes > 0 || hours > 0)
+        {
+            timeString += $"{minutes:D2}분 ";
+        }
+
+        if (remainingSecondsOutput > 0 || minutes > 0 || hours > 0)
+        {
+            timeString += $"{remainingSecondsOutput:D2}초";
+        }
+
+        return timeString.Trim();
+    }
+
+    public static string ConvertToKorean(string mode)
+    {
+        Dictionary<string, string> modeMap = new Dictionary<string, string>
+        {
+            { "Driving", "운전" },
+            { "Walking", "도보" },
+            { "Bicycling", "자전거" },
+            { "Transit", "대중교통" }
+        };
+
+        if (modeMap.ContainsKey(mode))
+        {
+            return modeMap[mode];
+        }
+        else
+        {
+            return "Unknown travel mode";
+        }
+    }
+
+    public static string ConvertToDistanceString(double kilometers)
+    {
+        if (kilometers == 0)
+        {
+            return "0m";
+        }
+
+        string[] units = { "m", "km", "Mm", "Gm" };
+        double distance = kilometers * 1000;
+        int unitIndex = 0;
+
+        while (distance >= 1000 && unitIndex < units.Length - 1)
+        {
+            distance /= 1000;
+            unitIndex++;
+        }
+
+        return $"{distance:N2}{units[unitIndex]}";
     }
 }

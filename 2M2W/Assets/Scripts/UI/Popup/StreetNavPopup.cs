@@ -171,9 +171,11 @@ public class StreetNavPopup : UIPopup
             case Buttons.NavStart:
                 MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
                 startPin.Location = Managers.App.startLatLon;
+                startPin.IsLayerSynchronized = false;
                 mapPins.Add(startPin);
                 MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
                 endPin.Location = Managers.App.endLatLon;
+                endPin.IsLayerSynchronized = false;
                 mapPins.Add(endPin);
                 GetRenderRoute();
                 break;
@@ -215,9 +217,9 @@ public class StreetNavPopup : UIPopup
                     {
                         if (false == string.IsNullOrEmpty(routeLeg.travelMode))
                         {
-                            GetText((int)Texts.Text_01).text = $"{routeLeg.travelDuration} {resourceRoute.durationUnit}";
-                            GetText((int)Texts.Text_02).text = $"{routeLeg.travelDistance} {resourceRoute.distanceUnit}";
-                            GetText((int)Texts.Text_03).text = $"{routeLeg.travelMode}";
+                            GetText((int)Texts.Text_01).text = $"{Utilities.ConvertToSecondsToTime(routeLeg.travelDuration)}";
+                            GetText((int)Texts.Text_02).text = $"{Utilities.ConvertToDistanceString(routeLeg.travelDistance)}";
+                            GetText((int)Texts.Text_03).text = $"{Utilities.ConvertToKorean(routeLeg.travelMode)}";
                             obj.SetActive(true);
 
                             Managers.App.itineraryItems = routeLeg.itineraryItems;
@@ -271,6 +273,7 @@ public class StreetNavPopup : UIPopup
             MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
             mapPin.transform.Find("Root").gameObject.SetActive(false);
             mapPin.Location = latLon;
+            mapPin.IsLayerSynchronized = false;
             mapPins.Add(mapPin);
         }
 

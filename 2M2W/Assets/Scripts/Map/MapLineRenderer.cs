@@ -34,7 +34,7 @@ public class MapLineRenderer : MonoBehaviour
             {
                 if (true == mapPins[index].enabled)
                 {
-                    lineRenderer.SetPosition(lineRenderer.positionCount++, new Vector3(mapPins[index].transform.position.x, mapPins[index].transform.position.y + Managers.App.MapRenderer.ZoomLevel, mapPins[index].transform.position.z));
+                    lineRenderer.SetPosition(lineRenderer.positionCount++, new Vector3(mapPins[index].transform.position.x, mapPins[index].transform.position.y, mapPins[index].transform.position.z));
                 }
             }
         }
