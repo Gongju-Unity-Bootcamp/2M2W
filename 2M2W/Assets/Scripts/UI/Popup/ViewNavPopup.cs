@@ -1,3 +1,4 @@
+using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
 using System;
 using UnityEngine;
@@ -27,6 +28,11 @@ public class ViewNavPopup : UIPopup
 
     private enum Buttons
     {
+        CurrentPosIcon,
+        NavModeIcon,
+        PlusIcon,
+        MinusIcon,
+
         CancelButton
     }
 
@@ -98,6 +104,22 @@ public class ViewNavPopup : UIPopup
 
         switch (button)
         {
+            case Buttons.CurrentPosIcon:
+                LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+                if (latLon != default)
+                {
+                    Managers.App.MapRenderer.Center = latLon;
+                }
+                break;
+            case Buttons.NavModeIcon:
+                Managers.App.SetNavMode();
+                break;
+            case Buttons.PlusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
+                break;
+            case Buttons.MinusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
+                break;
             case Buttons.CancelButton:
                 Managers.App.updateLatLon = false;
                 Managers.App.PopupPinLayer.MapPins.Remove(Managers.App.MapPin);
