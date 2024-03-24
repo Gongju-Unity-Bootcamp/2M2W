@@ -1,13 +1,24 @@
-using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ViewNavPopup : UIPopup
 {
+    private enum RawImages
+    {
+        RawImage
+    }
+
+    private enum Images
+    {
+        Button_01,
+        Button_02,
+        Button_03,
+        Button_04
+    }
+
     private enum Texts
     {
         StartText,
@@ -23,6 +34,8 @@ public class ViewNavPopup : UIPopup
     {
         base.Init();
 
+        BindRawImage(typeof(RawImages));
+        BindImage(typeof(Images));
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
@@ -58,12 +71,16 @@ public class ViewNavPopup : UIPopup
             }
         }));
 
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnClickRawImage, ViewEvent.Click, this);
+
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
         }
 
+        SetRouteMode();
         UpdateLatLon();
     }
 
@@ -76,11 +93,16 @@ public class ViewNavPopup : UIPopup
 
     private void ProcessButton(Buttons button)
     {
+        Managers.App.MapPinLayer.MapPins.Clear();
+        Managers.App.MapPinSubLayer.MapPins.Clear();
+        Managers.App.MapLineRenderer.gameObject.SetActive(false);
+
         switch (button)
         {
             case Buttons.CancelButton:
                 Managers.App.updateLatLon = false;
                 Managers.App.PopupPinLayer.MapPins.Remove(Managers.App.MapPin);
+                Managers.App.BingRouteMode = BingRouteMode.None;
                 Managers.UI.ClosePopupUI();
                 break;
         }
@@ -88,21 +110,53 @@ public class ViewNavPopup : UIPopup
         Managers.Sound.Play(SoundID.ButtonClick);
     }
 
+    private void OnDragRawImage(PointerEventData eventData)
+    {
+        Vector2 dragDelta = -eventData.delta * Managers.App.polatedValue;
+
+        Managers.App.MapController.Pan(dragDelta, false);
+    }
+
+    private void OnClickRawImage(PointerEventData eventData)
+    {
+        Ray ray = eventData.GetRay();
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            GameObject gameObject = hit.collider.GetComponentInChildren<Button>().gameObject;
+
+            if (gameObject != null)
+            {
+                ExecuteEvents.Execute(gameObject, eventData, ExecuteEvents.pointerClickHandler);
+            }
+        }
+    }
+
+    private void SetRouteMode()
+    {
+        switch (Managers.App.BingRouteMode)
+        {
+            case BingRouteMode.Driving:
+                GetImage((int)Images.Button_01).sprite = Managers.Resource.LoadSprite("spr_CasrIconHover");
+                break;
+            case BingRouteMode.Walking:
+                GetImage((int)Images.Button_02).sprite = Managers.Resource.LoadSprite("spr_HumanIconHover");
+                break;
+            case BingRouteMode.Transit:
+                GetImage((int)Images.Button_03).sprite = Managers.Resource.LoadSprite("spr_BusIconHover");
+                break;
+            case BingRouteMode.Bicycling:
+                GetImage((int)Images.Button_04).sprite = Managers.Resource.LoadSprite("spr_BicycleIconHover");
+                break;
+        }
+    }
+
     private void UpdateLatLon()
     {
         Managers.App.updateLatLon = true;
         MapPin mapPin = Managers.Resource.Instantiate("CurrentPin").GetComponent<MapPin>();
         Managers.App.MapPin = mapPin;
-        LatLon latLon = Managers.App.MapLocationService.GetLatLon();
-        if (latLon != default)
-        {
-            mapPin.Location = Managers.App.MapLocationService.GetLatLon();
-        }
-        else
-        {
-            mapPin.Location = Managers.App.startLatLon;
-            mapPin.GetComponentInChildren<Text>().text = "위치 확인 불가";
-        }
+        mapPin.Location = Managers.App.MapLocationService.GetLatLon();
         mapPin.IsLayerSynchronized = false;
         Managers.App.PopupPinLayer.MapPins.Add(mapPin);
     }

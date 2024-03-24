@@ -18,5 +18,6 @@ public class MapMarkerPinController : MonoBehaviour
     {
         Managers.App.MarkerData = data;
         Managers.Sound.Play(SoundID.ButtonBack);
+        Managers.UI.OpenPopup<NavDetailsPopup>();
     }
 }

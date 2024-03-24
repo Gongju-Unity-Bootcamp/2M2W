@@ -2,8 +2,9 @@ using Microsoft.Geospatial;
 
 public enum BingRouteMode
 {
-    Walking,
+    None,
     Driving,
+    Walking,
     Transit,
     Bicycling
 }

@@ -47,12 +47,8 @@ public class ArRoadViewPopup : UIPopup
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
         }
 
-        foreach (RawImages rawImageIndex in Enum.GetValues(typeof(RawImages)))
-        {
-            RawImage rawImage = GetRawImage((int)rawImageIndex);
-            rawImage.BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
-            rawImage.BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
-        }
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
     }
 
     private void OnClickButton(PointerEventData eventData)

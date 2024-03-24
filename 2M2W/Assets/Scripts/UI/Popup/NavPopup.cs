@@ -4,7 +4,6 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class NavPopup : UIPopup
 {
@@ -49,13 +48,9 @@ public class NavPopup : UIPopup
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
         }
 
-        foreach (RawImages rawImageIndex in Enum.GetValues(typeof(RawImages)))
-        {
-            RawImage rawImage = GetRawImage((int)rawImageIndex);
-            rawImage.BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
-            rawImage.BindViewEvent(OnClickRawImage, ViewEvent.Click, this);
-            rawImage.BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
-        }
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnClickRawImage, ViewEvent.Click, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
     }
 
     private void OnClickButton(PointerEventData eventData)

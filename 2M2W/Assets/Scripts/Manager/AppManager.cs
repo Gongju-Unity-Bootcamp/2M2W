@@ -22,6 +22,7 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public DefaultTextureTileLayer NavTile;
 
     [HideInInspector] public LocationServiceStatus LocationStatus;
+    [HideInInspector] public BingRouteMode BingRouteMode;
     [HideInInspector] public LatLonAlt latLonAlt;
     [HideInInspector] public LatLon startLatLon, endLatLon;
     [HideInInspector] public ItineraryItem[] itineraryItems;
@@ -101,7 +102,7 @@ public class AppManager : MonoBehaviour
                 if (currentTime > MapLocationService.perSeconds)
                 {
                     isCooldown = false;
-                    MapRenderer.Center = MapLocationService.GetLatLon();
+                    MapPin.Location = MapLocationService.GetLatLon();
                     currentTime = 0;
                 }
             }

@@ -190,4 +190,25 @@ public class Utilities : MonoBehaviour
 
         return $"{distance:N2}{units[unitIndex]}";
     }
+
+    public static string ConvertToLocationGroupInfo(int locationGroupInfo)
+    {
+        Dictionary<int, string> group = new Dictionary<int, string>() 
+        {
+            { 1, "공공기관" },
+            { 2, "포토존/도슨트" },
+            { 3, "공원" },
+            { 4, "병원" },
+            { 5, "화장실" },
+            { 6, "주차장" },
+            { 7, "기타" },
+        };
+
+        if (group[locationGroupInfo] == null)
+        {
+            return "Unknown location group";
+        }
+
+        return group[locationGroupInfo];
+    }
 }
