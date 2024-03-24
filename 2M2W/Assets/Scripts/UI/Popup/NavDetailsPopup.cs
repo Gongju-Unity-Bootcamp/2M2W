@@ -34,6 +34,7 @@ public class NavDetailsPopup : UIPopup
     }
 
     private ObservableList<MapPin> mapPins;
+    private LatLon endLatLon;
 
     public override void Init()
     {
@@ -53,6 +54,32 @@ public class NavDetailsPopup : UIPopup
         }
 
         mapPins = Managers.App.MapPinLayer.MapPins;
+        Managers.App.startLatLon = Managers.App.MapLocationService.GetLatLon();
+        Managers.App.endLatLon = new LatLon(Managers.App.MarkerData.Latitude, Managers.App.MarkerData.Longitude);
+
+        StartCoroutine(Managers.App.startLatLon.GetRoute(Managers.App.endLatLon, response =>
+        {
+            if (Managers.App.startLatLon == Managers.App.endLatLon)
+            {
+                return;
+            }
+
+            RouteDetails json = JsonUtilities.JsonToObject<RouteDetails>(response);
+
+            foreach (ResourceRouteSet resourceSet in json.resourceSets)
+            {
+                foreach (ResourceRoute resourceRoute in resourceSet.resources)
+                {
+                    foreach (RouteLeg routeLeg in resourceRoute.routeLegs)
+                    {
+                        if (false == string.IsNullOrEmpty(routeLeg.travelMode))
+                        {
+                            Managers.App.itineraryItems = routeLeg.itineraryItems;
+                        }
+                    }
+                }
+            }
+        }, BingRouteMode.Walking));
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -74,12 +101,12 @@ public class NavDetailsPopup : UIPopup
                 LatLon latLon = Managers.App.MapLocationService.GetLatLon();
                 if (latLon != default)
                 {
-                    Managers.App.startLatLon = latLon;
                     MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
                     startPin.Location = Managers.App.startLatLon;
                     startPin.IsLayerSynchronized = false;
                     mapPins.Add(startPin);
                     MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
+                    Managers.App.endLatLon = endLatLon;
                     endPin.Location = Managers.App.endLatLon;
                     endPin.IsLayerSynchronized = false;
                     mapPins.Add(endPin);
@@ -117,7 +144,7 @@ public class NavDetailsPopup : UIPopup
         GetText((int)Texts.Text_01).text = Managers.App.MarkerData.Name;
         GetText((int)Texts.Text_02).text = Utilities.ConvertToLocationGroupInfo(Managers.App.MarkerData.Group);
         
-        StartCoroutine(new LatLon(Managers.App.MarkerData.Latitude, Managers.App.MarkerData.Longitude).GetAddress(response =>
+        StartCoroutine(endLatLon.GetAddress(response =>
         {
             LocationDetails json = JsonUtilities.JsonToObject<LocationDetails>(response);
 
