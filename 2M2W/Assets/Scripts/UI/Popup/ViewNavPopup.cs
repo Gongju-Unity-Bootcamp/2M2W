@@ -98,10 +98,6 @@ public class ViewNavPopup : UIPopup
 
     private void ProcessButton(Buttons button)
     {
-        Managers.App.MapPinLayer.MapPins.Clear();
-        Managers.App.MapPinSubLayer.MapPins.Clear();
-        Managers.App.MapLineRenderer.gameObject.SetActive(false);
-
         switch (button)
         {
             case Buttons.CurrentPosIcon:
@@ -121,6 +117,9 @@ public class ViewNavPopup : UIPopup
                 Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
                 break;
             case Buttons.CancelButton:
+                Managers.App.MapPinLayer.MapPins.Clear();
+                Managers.App.MapPinSubLayer.MapPins.Clear();
+                Managers.App.MapLineRenderer.gameObject.SetActive(false);
                 Managers.App.updateLatLon = false;
                 Managers.App.PopupPinLayer.MapPins.Remove(Managers.App.MapPin);
                 Managers.App.BingRouteMode = BingRouteMode.None;
