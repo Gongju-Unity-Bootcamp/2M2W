@@ -26,9 +26,13 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public LatLon startLatLon, endLatLon;
     [HideInInspector] public ItineraryItem[] itineraryItems;
     [HideInInspector] public MarkerData MarkerData;
+    [HideInInspector] public MapPin MapPin;
 
     [HideInInspector] public float polatedValue;
-    [HideInInspector] public bool navMode, mute, isPinch;
+    [HideInInspector] public bool navMode, mute, isPinch, updateLatLon;
+
+    private float currentTime;
+    private bool isCooldown;
 
     public void Init() 
     {
@@ -83,6 +87,25 @@ public class AppManager : MonoBehaviour
 
         SetNavMode();
         SetMapMarker(0);
+    }
+
+    private void Update()
+    {
+        if (true == updateLatLon)
+        {
+            if (false == isCooldown)
+            {
+                isCooldown = true;
+                currentTime += Time.deltaTime;
+
+                if (currentTime > MapLocationService.perSeconds)
+                {
+                    isCooldown = false;
+                    MapRenderer.Center = MapLocationService.GetLatLon();
+                    currentTime = 0;
+                }
+            }
+        }
     }
 
     public void SetNavMode()

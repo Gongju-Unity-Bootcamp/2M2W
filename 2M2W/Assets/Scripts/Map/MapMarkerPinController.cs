@@ -14,12 +14,9 @@ public class MapMarkerPinController : MonoBehaviour
         canvas[markerData.Group - 1].GetComponentInChildren<Button>().BindViewEvent(OnClickButton, ViewEvent.Click, this);
     }
 
-    //public void OnClickButton(PointerEventData eventData)
-    //    => Managers.App.MarkerData = data;
-
     public void OnClickButton(PointerEventData eventData)
     {
         Managers.App.MarkerData = data;
-        Debug.Log("asd");
+        Managers.Sound.Play(SoundID.ButtonBack);
     }
 }

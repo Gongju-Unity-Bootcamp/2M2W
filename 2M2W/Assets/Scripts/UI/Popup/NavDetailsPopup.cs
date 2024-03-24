@@ -1,0 +1,72 @@
+using System;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class NavDetailsPopup : UIPopup
+{
+    private enum Buttons
+    {
+        Button,
+
+        Button_01,
+        Button_02,
+
+        Button_01b,
+        Button_02b,
+        Button_03b,
+        Button_04b,
+
+        BackButton
+    }
+
+    private enum Images
+    {
+        MaskImage
+    }
+
+
+    public override void Init()
+    {
+        base.Init();
+
+        BindButton(typeof(Buttons));
+
+        foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
+        {
+            Button button = GetButton((int)buttonIndex);
+            button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
+        }
+    }
+
+    private void OnClickButton(PointerEventData eventData)
+    {
+        Buttons button = Enum.Parse<Buttons>(eventData.pointerEnter.name);
+
+        ProcessButton(button);
+    }
+
+    private void ProcessButton(Buttons button)
+    {
+        switch (button)
+        {
+            case Buttons.Button:
+                break;
+            case Buttons.Button_01:
+                break;
+            case Buttons.Button_02: 
+                break;
+            case Buttons.Button_01b: 
+                break;
+            case Buttons.Button_02b:
+                break;
+            case Buttons.Button_03b:
+                break;
+            case Buttons.Button_04b:
+                break;
+            case Buttons.BackButton:
+                break;
+        }
+
+        Managers.Sound.Play(SoundID.ButtonClick);
+    }
+}

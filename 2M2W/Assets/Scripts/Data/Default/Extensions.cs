@@ -5,9 +5,8 @@ using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
-using UnityEngine;
 using UnityEngine.UI;
-using System.Threading.Tasks;
+using UnityEngine;
 
 public static class Extensions
 {

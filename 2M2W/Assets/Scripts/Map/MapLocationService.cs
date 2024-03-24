@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapLocationService : MonoBehaviour
 {
-    private const float desiredAccuracyInMeters = 10f, updateDistanceInMeters = 1f;
+    public const float desiredAccuracyInMeters = 10f, updateDistanceInMeters = 1f, perSeconds = 60f;
 
     private LocationService locationService;
 

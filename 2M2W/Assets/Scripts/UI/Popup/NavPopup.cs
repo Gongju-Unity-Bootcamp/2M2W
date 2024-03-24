@@ -73,10 +73,10 @@ public class NavPopup : UIPopup
                 Managers.App.SetNavMode();
                 break;
             case Buttons.CurrentPosIcon:
-                LatLon latlon = Managers.App.MapLocationService.GetLatLon();
-                if (latlon != default)
+                LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+                if (latLon != default)
                 {
-                    Managers.App.MapRenderer.Center = latlon;
+                    Managers.App.MapRenderer.Center = latLon;
                 }
                 break;
             case Buttons.EnlargementIcon:

@@ -67,10 +67,10 @@ public class ArRoadViewPopup : UIPopup
         switch (button)
         {
             case Buttons.CurrentPosIcon:
-                LatLon latlon = Managers.App.MapLocationService.GetLatLon();
-                if (latlon != default)
+                LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+                if (latLon != default)
                 {
-                    Managers.App.MapRenderer.Center = latlon;
+                    Managers.App.MapRenderer.Center = latLon;
                 }
                 break;
             case Buttons.NavModeIcon:
