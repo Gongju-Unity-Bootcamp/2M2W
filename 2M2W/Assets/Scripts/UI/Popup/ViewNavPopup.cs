@@ -72,7 +72,6 @@ public class ViewNavPopup : UIPopup
         }));
 
         GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
-        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnClickRawImage, ViewEvent.Click, this);
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
@@ -115,21 +114,6 @@ public class ViewNavPopup : UIPopup
         Vector2 dragDelta = -eventData.delta * Managers.App.polatedValue;
 
         Managers.App.MapController.Pan(dragDelta, false);
-    }
-
-    private void OnClickRawImage(PointerEventData eventData)
-    {
-        Ray ray = eventData.GetRay();
-
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            GameObject gameObject = hit.collider.GetComponentInChildren<Button>().gameObject;
-
-            if (gameObject != null)
-            {
-                ExecuteEvents.Execute(gameObject, eventData, ExecuteEvents.pointerClickHandler);
-            }
-        }
     }
 
     private void SetRouteMode()
