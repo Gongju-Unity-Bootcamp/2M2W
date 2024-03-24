@@ -30,8 +30,6 @@ public class ViewNavPopup : UIPopup
     {
         CurrentPosIcon,
         NavModeIcon,
-        PlusIcon,
-        MinusIcon,
 
         CancelButton
     }
