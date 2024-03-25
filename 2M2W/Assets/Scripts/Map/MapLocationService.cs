@@ -65,6 +65,7 @@ public class MapLocationService : MonoBehaviour
             case LocationServiceStatus.Stopped:
             case LocationServiceStatus.Failed:
             case LocationServiceStatus.Initializing:
+                Managers.UI.OpenPopup<ConsentPopup>();
                 return default;
             default:
                 return new LatLon(locationService.lastData.latitude, locationService.lastData.longitude);
