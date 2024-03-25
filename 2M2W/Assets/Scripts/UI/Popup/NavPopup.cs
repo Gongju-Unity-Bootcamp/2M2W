@@ -14,6 +14,8 @@ public class NavPopup : UIPopup
 
     private enum Buttons
     {
+        ReportButton,
+
         NavModeIcon,
         CurrentPosIcon,
         EnlargementIcon,
@@ -66,6 +68,9 @@ public class NavPopup : UIPopup
     {
         switch (button)
         {
+            case Buttons.ReportButton:
+                Application.OpenURL("tel://112");
+                break;
             case Buttons.NavModeIcon:
                 Managers.App.SetNavMode();
                 break;

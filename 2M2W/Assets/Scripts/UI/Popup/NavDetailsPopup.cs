@@ -2,7 +2,11 @@ using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.Device;
 using UnityEngine.UI;
+using UnityEngine;
+using Application = UnityEngine.Device.Application;
+using System.IO;
 
 public class NavDetailsPopup : UIPopup
 {
@@ -13,6 +17,7 @@ public class NavDetailsPopup : UIPopup
 
     private enum Buttons
     {
+        ReportButton,
         Button,
 
         Button_01,
@@ -100,6 +105,9 @@ public class NavDetailsPopup : UIPopup
 
         switch (button)
         {
+            case Buttons.ReportButton:
+                Application.OpenURL("tel://112");
+                break;
             case Buttons.Button:
                 LatLon latLon = Managers.App.MapLocationService.GetLatLon();
                 if (latLon != default)
@@ -122,8 +130,22 @@ public class NavDetailsPopup : UIPopup
                 }
                 break;
             case Buttons.Button_01:
+                MarkerData data = Managers.App.MarkerData;
+                Texture2D texture = Managers.Resource.LoadSprite(data.Path).texture;
+                if (texture != null)
+                {
+                    byte[] bytes = texture.EncodeToPNG();
+                    string fileName = data.Name;
+                    string filePath = System.IO.Path.Combine(Path.SAVE, fileName);
+                    File.WriteAllBytes(filePath, bytes);
+                }
                 break;
             case Buttons.Button_02:
+                string url = Managers.App.MarkerData.Link;
+                if (string.IsNullOrEmpty(url))
+                {
+                    Application.OpenURL(url);
+                }
                 break;
             case Buttons.Button_01b:
                 Managers.UI.CloseAllPopupUI();

@@ -1,5 +1,6 @@
 public static class Path
 {
+    public const string SAVE = "sdcard/Download/";
     public const string TABLE = "Assets/Resources/Tables/";
 
     public const string PREFAB = "Prefabs/";
