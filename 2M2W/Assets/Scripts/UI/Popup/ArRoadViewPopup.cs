@@ -70,6 +70,10 @@ public class ArRoadViewPopup : UIPopup
                 {
                     Managers.App.MapRenderer.Center = latLon;
                 }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
+                }
                 break;
             case Buttons.NavModeIcon:
                 Managers.App.SetNavMode();

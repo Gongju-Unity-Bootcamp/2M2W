@@ -105,7 +105,7 @@ public class NavDetailsPopup : UIPopup
                 if (latLon != default)
                 {
                     MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
-                    startPin.Location = Managers.App.startLatLon;
+                    startPin.Location = latLon;
                     startPin.IsLayerSynchronized = false;
                     mapPins.Add(startPin);
                     MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
@@ -115,6 +115,10 @@ public class NavDetailsPopup : UIPopup
                     mapPins.Add(endPin);
                     GetRenderRoute();
                     Managers.UI.OpenPopup<ViewNavPopup>();
+                }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
                 }
                 break;
             case Buttons.Button_01:

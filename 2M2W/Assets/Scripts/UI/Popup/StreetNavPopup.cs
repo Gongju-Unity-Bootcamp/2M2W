@@ -178,6 +178,10 @@ public class StreetNavPopup : UIPopup
                 {
                     Managers.App.MapRenderer.Center = latLon;
                 }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
+                }
                 break;
             case Buttons.PlusIcon:
                 Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;

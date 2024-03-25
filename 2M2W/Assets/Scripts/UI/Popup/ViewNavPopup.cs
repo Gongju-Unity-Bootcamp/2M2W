@@ -9,6 +9,7 @@ public class ViewNavPopup : UIPopup
 {
     private enum RawImages
     {
+        XRImage,
         RawImage
     }
 
@@ -85,6 +86,18 @@ public class ViewNavPopup : UIPopup
 
         SetRouteMode();
         UpdateLatLon();
+
+        LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+        if (latLon != default)
+        {
+            GetRawImage((int)RawImages.XRImage).texture = Managers.Resource.LoadRenderTexture("XRCamera");
+        }
+        else
+        {
+            GetRawImage((int)RawImages.XRImage).texture = Managers.Resource.LoadSprite("spr_DownloadBackground").texture;
+        }
+
+        Managers.UI.OpenPopup<FindPathPopup>();
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -103,6 +116,10 @@ public class ViewNavPopup : UIPopup
                 if (latLon != default)
                 {
                     Managers.App.MapRenderer.Center = latLon;
+                }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
                 }
                 break;
             case Buttons.NavModeIcon:

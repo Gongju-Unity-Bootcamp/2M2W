@@ -75,6 +75,10 @@ public class NavPopup : UIPopup
                 {
                     Managers.App.MapRenderer.Center = latLon;
                 }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
+                }
                 break;
             case Buttons.EnlargementIcon:
                 Managers.UI.OpenPopup<StreetNavPopup>();

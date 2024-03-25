@@ -607,7 +607,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC81C\uBB3C\uD3EC\uC758 \uAFC8\n\uB300\uD55C\uBBFC\uAD6D\uC758 \uBBF8\uB798"
+  m_text: "\uCDA9\uB0A8\uC758 \uAFC8\n\uB300\uD55C\uBBFC\uAD6D\uC758 \uBBF8\uB798"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fe9e757c6afe51d4db60e9894c20d8d1, type: 2}
   m_sharedMaterial: {fileID: -7595900551676228979, guid: fe9e757c6afe51d4db60e9894c20d8d1,
@@ -2039,8 +2039,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -379, y: 34}
-  m_SizeDelta: {x: 228, y: 66}
+  m_AnchoredPosition: {x: -415.38696, y: 33.5}
+  m_SizeDelta: {x: 155.2261, y: 67}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &465125847636152791
 CanvasRenderer:
