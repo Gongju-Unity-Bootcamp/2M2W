@@ -211,4 +211,20 @@ public class Utilities : MonoBehaviour
 
         return group[locationGroupInfo];
     }
+
+    public static void AndroidOpenURL(string url)
+    {
+        AndroidJavaClass intentClass = new AndroidJavaClass("android.content.Intent");
+        string actionView = intentClass.GetStatic<string>("ACTION_VIEW");
+
+        AndroidJavaObject uriClass = new AndroidJavaClass("android.net.Uri");
+        AndroidJavaObject uriObject = uriClass.CallStatic<AndroidJavaObject>("parse", url);
+
+        AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent", actionView, uriObject);
+
+        AndroidJavaClass unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject currentActivity = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity");
+
+        currentActivity.Call("startActivity", intentObject);
+    }
 }

@@ -1,12 +1,11 @@
 using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
+using System.IO;
 using System;
+using Application = UnityEngine.Device.Application;
 using UnityEngine.EventSystems;
-using UnityEngine.Device;
 using UnityEngine.UI;
 using UnityEngine;
-using Application = UnityEngine.Device.Application;
-using System.IO;
 
 public class NavDetailsPopup : UIPopup
 {
@@ -132,20 +131,17 @@ public class NavDetailsPopup : UIPopup
             case Buttons.Button_01:
                 MarkerData data = Managers.App.MarkerData;
                 Texture2D texture = Managers.Resource.LoadSprite(data.Path).texture;
+                string fileName = data.Name;
                 if (texture != null)
                 {
-                    byte[] bytes = texture.EncodeToPNG();
-                    string fileName = data.Name;
-                    string filePath = System.IO.Path.Combine(Path.SAVE, fileName);
-                    File.WriteAllBytes(filePath, bytes);
+                    NativeGallery.SaveImageToGallery(texture, Path.ALBUM, fileName);
                 }
                 break;
             case Buttons.Button_02:
                 string url = Managers.App.MarkerData.Link;
-                if (string.IsNullOrEmpty(url))
-                {
-                    Application.OpenURL(url);
-                }
+#if UNITY_ANDROID
+                Utilities.AndroidOpenURL(url);
+#endif
                 break;
             case Buttons.Button_01b:
                 Managers.UI.CloseAllPopupUI();
