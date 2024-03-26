@@ -33,6 +33,7 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public float polatedValue;
     [HideInInspector] public bool navMode, mute, isPinch, updateLatLon;
 
+    [HideInInspector] public PermissionCallbacks callbacks;
     private float currentTime;
     private bool isCooldown;
 
@@ -48,6 +49,7 @@ public class AppManager : MonoBehaviour
         MapRenderer = BingMap.GetComponent<MapRenderer>();
         MapController = BingMap.GetComponent<MapInteractionController>();
         MapLocationService = BingMap.GetComponent<MapLocationService>();
+
         MapPinLayer = BingMap.GetComponent<MapPinLayer>();
         MapPinSubLayer = BingMap.AddComponent<MapPinLayer>();
         PopupPinLayer = BingMap.AddComponent<MapPinLayer>();
@@ -68,29 +70,35 @@ public class AppManager : MonoBehaviour
         navMode = false;
         mute = false;
 
+        callbacks = new PermissionCallbacks();
+
         if (false == Permission.HasUserAuthorizedPermission(Permission.FineLocation)
             || false == Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
-            MapLocationService.StartLocationService();
-            CameraService.StartCameraService();
             Managers.UI.OpenPopup<PermitPopup>();
         }
+        else if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            Managers.UI.OpenPopup<InternetConnectPopup>();
+        }
+        else
+        {
+            Managers.UI.OpenPopup<MainPopup>();
+            Managers.Sound.Play(SoundID.MainBGM);
 
+            GetDeviceLocation();
+            SetNavMode();
+            SetMapMarker(0);
+        }
+    }
+
+    private void Update()
+    {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             Managers.UI.OpenPopup<InternetConnectPopup>();
         }
 
-        Managers.UI.OpenPopup<MainPopup>();
-        Managers.Sound.Play(SoundID.MainBGM);
-
-        GetDeviceLocation();
-        SetNavMode();
-        SetMapMarker(0);
-    }
-
-    private void Update()
-    {
         if (true == updateLatLon)
         {
             if (false == isCooldown)

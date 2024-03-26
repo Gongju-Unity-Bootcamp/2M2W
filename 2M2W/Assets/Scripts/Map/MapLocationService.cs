@@ -8,16 +8,21 @@ public class MapLocationService : MonoBehaviour
 
     private LocationService locationService;
 
+    private void Awake()
+        => locationService = Input.location;
+
+    private void Start()
+        => StartLocationService();
+
     public void StartLocationService(string permissionName = null)
     {
         if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
-            locationService = Input.location;
             locationService.Start(desiredAccuracyInMeters, updateDistanceInMeters);
         }
         else
         {
-            PermissionCallbacks callbacks = new();
+            PermissionCallbacks callbacks = Managers.App.callbacks;
             callbacks.PermissionGranted += StartLocationService;
             Permission.RequestUserPermission(Permission.FineLocation, callbacks);
         }
