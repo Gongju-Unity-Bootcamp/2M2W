@@ -37,6 +37,7 @@ public class PermitPopup : UIPopup
                 Managers.UI.ClosePopupUI();
                 Managers.UI.OpenPopup<MainPopup>();
                 Managers.Sound.Play(SoundID.MainBGM);
+                Managers.App.isOpenPopup = true;
                 break;
         }
 

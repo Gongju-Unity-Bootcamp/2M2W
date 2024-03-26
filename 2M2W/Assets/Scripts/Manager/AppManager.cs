@@ -31,11 +31,11 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public MapPin MapPin;
 
     [HideInInspector] public float polatedValue;
-    [HideInInspector] public bool navMode, mute, isPinch, updateLatLon;
+    [HideInInspector] public bool navMode, mute, isPinch, isOpenPopup, updateLatLon;
 
     [HideInInspector] public PermissionCallbacks callbacks;
     private float currentTime;
-    private bool isCooldown, isOpenPopup, isPlay;
+    private bool isCooldown;
 
     public void Init() 
     {
@@ -83,24 +83,20 @@ public class AppManager : MonoBehaviour
             Managers.UI.OpenPopup<MainPopup>();
             Managers.Sound.Play(SoundID.MainBGM);
 
-            GetDeviceLocation();
-            SetNavMode();
-            SetMapMarker(0);
-
-            isPlay = true;
+            isOpenPopup = true;
         }
+
+        GetDeviceLocation();
+        SetNavMode();
+        SetMapMarker(0);
     }
 
     private void Update()
     {
-        if (false == isPlay)
+        if (true == isOpenPopup &&
+            Application.internetReachability == NetworkReachability.NotReachable)
         {
-            return;
-        }
-
-        if (false == isOpenPopup && Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            isOpenPopup = true;
+            isOpenPopup = false;
             Managers.UI.OpenPopup<InternetConnectPopup>();
         }
 
