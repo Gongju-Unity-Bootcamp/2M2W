@@ -6,7 +6,9 @@ using UnityEngine;
 public class ResourceManager
 {
     public Dictionary<string, GameObject> Prefabs { get; set; }
+    public Dictionary<string, GameObject> Docents { get; set; }
     public Dictionary<string, Texture> Textures { get; set; }
+    public Dictionary<string, Texture2D> Texture2Ds { get; set; }
     public Dictionary<string, RenderTexture> RenderTextures { get; set; }
     public Dictionary<string, RawImage> RawImages { get; private set; }
     public Dictionary<string, Image> Images { get; private set; }
@@ -16,7 +18,9 @@ public class ResourceManager
     public void Init()
     {
         Prefabs = new Dictionary<string, GameObject>();
+        Docents = new Dictionary<string, GameObject>();
         Textures = new Dictionary<string, Texture>();
+        Texture2Ds = new Dictionary<string, Texture2D>();
         RenderTextures = new Dictionary<string, RenderTexture>();
         RawImages = new Dictionary<string, RawImage>();
         Images = new Dictionary<string, Image>();
@@ -40,8 +44,14 @@ public class ResourceManager
     public GameObject LoadPrefab(string path)
         => Load(Prefabs, string.Concat(Path.PREFAB, path));
 
+    public GameObject LoadDocent(string path)
+    => Load(Docents, string.Concat(Path.DOCENT, path));
+
     public Texture LoadTexture(string path)
         => Load(Textures, string.Concat(Path.TEXTURE, path));
+
+    public Texture2D LoadTexture2D(string path)
+    => Load(Texture2Ds, string.Concat(Path.TEXTURE2D, path));
 
     public Texture LoadRenderTexture(string path)
     => Load(RenderTextures, string.Concat(Path.RENDERTEXTURE, path));

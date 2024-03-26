@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Collections;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine;
 
 public class MultipleImageTracker : MonoBehaviour
 {
     private ARTrackedImageManager trackedImageManager;
 
-    [SerializeField]
-    private GameObject[] placeablePrefabs;
+    public GameObject[] placeablePrefabs;
     private Dictionary<string, GameObject> objDic;
 
     private void Awake()
@@ -28,15 +27,15 @@ public class MultipleImageTracker : MonoBehaviour
 
     private void OnEnable()
     {
-        trackedImageManager.trackedImagesChanged += OnTarckedImageChanged;
+        trackedImageManager.trackedImagesChanged += OnTrackedImageChanged;
     }
 
     private void OnDisable()
     {
-        trackedImageManager.trackedImagesChanged -= OnTarckedImageChanged;
+        trackedImageManager.trackedImagesChanged -= OnTrackedImageChanged;
     }
 
-    private void OnTarckedImageChanged(ARTrackedImagesChangedEventArgs eventArgs)
+    private void OnTrackedImageChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
         foreach(ARTrackedImage trackedImage in eventArgs.added)
         {

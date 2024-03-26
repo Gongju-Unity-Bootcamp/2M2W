@@ -12,7 +12,6 @@ public class MarkerData
     public double Longitude { get; set; }
     public string Path { get; set; }
     public string Link { get; set; }
-    public string Coupon { get; set; }
-    public string Image { get; set; }
-    public string Video { get; set; }
+    public int Coupon { get; set; }
+    public string Ref { get; set; }
 }
