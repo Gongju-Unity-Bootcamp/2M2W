@@ -9,6 +9,7 @@ public class AppManager : MonoBehaviour
 {
     [HideInInspector] public XROrigin XROrigin;
     [HideInInspector] public XRInteractionManager XRManager;
+    [HideInInspector] public CameraService CameraService;
 
     [HideInInspector] public MapSession MapSession;
     [HideInInspector] public MapRenderer MapRenderer;
@@ -37,8 +38,10 @@ public class AppManager : MonoBehaviour
 
     public void Init() 
     {
-        XROrigin = Managers.Resource.Instantiate("XROrigin").GetComponent<XROrigin>();
+        GameObject subCamera = Managers.Resource.Instantiate("XROrigin");
+        XROrigin = subCamera.GetComponent<XROrigin>();
         XRManager = Managers.Resource.Instantiate("XRManager").GetComponent<XRInteractionManager>();
+        CameraService = subCamera.GetComponent<CameraService>();
 
         GameObject BingMap = Managers.Resource.Instantiate("BingMap");
         MapSession = BingMap.GetComponent<MapSession>();
@@ -61,16 +64,6 @@ public class AppManager : MonoBehaviour
 
         NavTile = BingMap.GetComponent<DefaultTextureTileLayer>();
 
-        if (MapLocationService.GetLocation(out LocationServiceStatus status, out double latitude, out double longitude, out double altitude))
-        {
-            LocationStatus = status;
-            latLonAlt = new LatLonAlt(latitude, longitude, altitude);
-        }
-        else
-        {
-            latLonAlt = default;
-        }
-
         polatedValue = 0.025f;
         navMode = false;
         mute = false;
@@ -79,6 +72,12 @@ public class AppManager : MonoBehaviour
             || false == Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
             Managers.UI.OpenPopup<PermitPopup>();
+            MapLocationService.StartLocationService();
+            CameraService.StartCameraService();
+        }
+        else if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            Managers.UI.OpenPopup<InternetConnectPopup>();
         }
         else
         {
@@ -86,6 +85,7 @@ public class AppManager : MonoBehaviour
             Managers.Sound.Play(SoundID.MainBGM);
         }
 
+        GetDeviceLocation();
         SetNavMode();
         SetMapMarker(0);
     }
@@ -106,6 +106,19 @@ public class AppManager : MonoBehaviour
                     currentTime = 0;
                 }
             }
+        }
+    }
+
+    public void GetDeviceLocation()
+    {
+        if (MapLocationService.GetLocation(out LocationServiceStatus status, out double latitude, out double longitude, out double altitude))
+        {
+            LocationStatus = status;
+            latLonAlt = new LatLonAlt(latitude, longitude, altitude);
+        }
+        else
+        {
+            latLonAlt = default;
         }
     }
 

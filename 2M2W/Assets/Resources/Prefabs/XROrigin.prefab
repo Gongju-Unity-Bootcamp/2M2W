@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 8821271058098135118}
   - component: {fileID: 679947836040239421}
   - component: {fileID: 2372092598532866135}
+  - component: {fileID: 4720260910869341704}
   m_Layer: 0
   m_Name: XROrigin
   m_TagString: Untagged
@@ -129,6 +130,18 @@ MonoBehaviour:
   m_PlanePrefab: {fileID: 5460571496523654206, guid: 966dcd330936da642a0a3bf6018760dd,
     type: 3}
   m_DetectionMode: -1
+--- !u!114 &4720260910869341704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6474851173089061095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 063ac1d6a1143e949acef7c75e429b0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8196181986488102828
 GameObject:
   m_ObjectHideFlags: 0

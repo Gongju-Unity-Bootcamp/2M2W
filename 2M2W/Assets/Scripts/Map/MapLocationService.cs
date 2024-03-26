@@ -16,7 +16,7 @@ public class MapLocationService : MonoBehaviour
 
     public void StartLocationService(string permissionName = null)
     {
-        if (Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+        if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
             locationService.Start(desiredAccuracyInMeters, updateDistanceInMeters);
         }
