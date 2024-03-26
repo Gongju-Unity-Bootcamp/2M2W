@@ -3,7 +3,9 @@ using UnityEngine.XR.ARSubsystems;
 using UnityEngine.Android;
 using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor.XR.ARSubsystems;
+#endif
 
 public class CameraService : MonoBehaviour
 {
@@ -12,7 +14,6 @@ public class CameraService : MonoBehaviour
     private Camera subCamera;
     private ARTrackedImageManager imageManager;
     private MultipleImageTracker tracker;
-    private XRReferenceImageLibrary library;
     public bool isUpdateCamera;
 
     private void Awake()
@@ -20,7 +21,6 @@ public class CameraService : MonoBehaviour
         subCamera = GameObject.FindGameObjectWithTag("SubCamera").GetComponent<Camera>();
         imageManager = GetComponent<ARTrackedImageManager>();
         tracker = GetComponent<MultipleImageTracker>();
-        library = new XRReferenceImageLibrary();
     }
 
     private void Start()
@@ -34,19 +34,13 @@ public class CameraService : MonoBehaviour
                 docents.Add(data);
             }
         }
-
+        
         tracker.placeablePrefabs = new GameObject[docents.Count];
 
         for (int index = 0; index < docents.Count; ++index)
         {
-            Texture2D texture = Managers.Resource.LoadTexture2D(docents[index].Ref);
-            library.SetTexture(index, texture, false);
-            library.SetName(index, docents[index].Ref);
-            library.SetSpecifySize(index, true);
             tracker.placeablePrefabs[index] = Managers.Resource.LoadDocent(docents[index].Ref);
         }
-
-        imageManager.referenceLibrary = library;
 
         StartCameraService();
     }
