@@ -4,6 +4,7 @@ using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.Android;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AppManager : MonoBehaviour
 {

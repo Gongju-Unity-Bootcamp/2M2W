@@ -1,9 +1,16 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ArNavPopup : UIPopup
 {
+    private enum Objects
+    {
+        Content
+    }
+
     private enum Buttons
     {
         Button_01b,
@@ -14,16 +21,34 @@ public class ArNavPopup : UIPopup
         BackButton
     }
 
+    private List<UISubItem> subItems;
+    private Transform obj;
+
     public override void Init()
     {
         base.Init();
 
+        BindObject(typeof(Objects));
         BindButton(typeof(Buttons));
+
+        foreach (Objects objectIndex in Enum.GetValues(typeof(Objects)))
+        {
+            obj = GetObject((int)objectIndex).transform;
+        }
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
+        }
+
+        subItems = new List<UISubItem>();
+
+        foreach (MarkerData data in Managers.App.CameraService.docents)
+        {
+            ArNavSubItem subItem = Managers.UI.OpenSubItem<ArNavSubItem>(obj);
+            subItem.data = data;
+            subItems.Add(subItem);
         }
     }
 
@@ -54,5 +79,13 @@ public class ArNavPopup : UIPopup
         }
 
         Managers.Sound.Play(SoundID.ButtonClick);
+    }
+
+    private void OnDestroy()
+    {
+        foreach (UISubItem subItem in subItems)
+        {
+            subItem.CloseSubItem();
+        }
     }
 }

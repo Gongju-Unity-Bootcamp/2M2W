@@ -7,6 +7,8 @@ using UnityEditor.XR.ARSubsystems;
 
 public class CameraService : MonoBehaviour
 {
+    [HideInInspector] public List<MarkerData> docents;
+
     private Camera subCamera;
     private ARTrackedImageManager imageManager;
     private MultipleImageTracker tracker;
@@ -23,25 +25,25 @@ public class CameraService : MonoBehaviour
 
     private void Start()
     {
-        List<MarkerData> markerData = new List<MarkerData>();
+        docents = new List<MarkerData>();
 
         foreach (MarkerData data in Managers.Data.Marker.Values)
         {
             if (false == string.IsNullOrEmpty(data.Ref))
             {
-                markerData.Add(data);
+                docents.Add(data);
             }
         }
 
-        tracker.placeablePrefabs = new GameObject[markerData.Count];
+        tracker.placeablePrefabs = new GameObject[docents.Count];
 
-        for (int index = 0; index < markerData.Count; ++index)
+        for (int index = 0; index < docents.Count; ++index)
         {
-            Texture2D texture = Managers.Resource.LoadTexture2D(markerData[index].Ref);
+            Texture2D texture = Managers.Resource.LoadTexture2D(docents[index].Ref);
             library.SetTexture(index, texture, false);
-            library.SetName(index, markerData[index].Ref);
+            library.SetName(index, docents[index].Ref);
             library.SetSpecifySize(index, true);
-            tracker.placeablePrefabs[index] = Managers.Resource.LoadDocent(markerData[index].Ref);
+            tracker.placeablePrefabs[index] = Managers.Resource.LoadDocent(docents[index].Ref);
         }
 
         imageManager.referenceLibrary = library;

@@ -14,4 +14,5 @@ public class MarkerData
     public string Link { get; set; }
     public int Coupon { get; set; }
     public string Ref { get; set; }
+    public string Desc { get; set; }
 }
