@@ -1,6 +1,5 @@
 using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
-using System.IO;
 using System;
 using Application = UnityEngine.Device.Application;
 using UnityEngine.EventSystems;
@@ -11,6 +10,7 @@ public class NavDetailsPopup : UIPopup
 {
     private enum Images
     {
+        Mask,
         MaskImage
     }
 
@@ -130,17 +130,20 @@ public class NavDetailsPopup : UIPopup
                 break;
             case Buttons.Button_01:
                 MarkerData data = Managers.App.MarkerData;
-                Texture2D texture = Managers.Resource.LoadSprite(data.Path).texture;
-                string fileName = data.Name;
+                RectTransform rectTransform = GetImage((int)Images.Mask).rectTransform;
+                Texture2D texture = Utilities.TakeScreenshot(data, rectTransform);
                 if (texture != null)
                 {
-                    NativeGallery.SaveImageToGallery(texture, Path.ALBUM, fileName);
+                    Managers.UI.OpenPopup<ImageDownloadPopup>();
                 }
                 break;
             case Buttons.Button_02:
                 string url = Managers.App.MarkerData.Link;
 #if UNITY_ANDROID
-                Utilities.AndroidOpenURL(url);
+                if (url != null)
+                {
+                    Utilities.AndroidOpenURL(url);
+                }
 #endif
                 break;
             case Buttons.Button_01b:

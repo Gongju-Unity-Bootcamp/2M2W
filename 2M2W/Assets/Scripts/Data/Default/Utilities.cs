@@ -1,10 +1,10 @@
 using UniRx.Triggers;
 using UniRx;
+using System.Collections.Generic;
 using System;
 using Object = UnityEngine.Object;
 using UnityEngine.EventSystems;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class Utilities : MonoBehaviour
 {
@@ -111,6 +111,21 @@ public class Utilities : MonoBehaviour
 
     public static void BindModelEvent<T>(ReactiveProperty<T> model, Action<T> action, Component component)
        => model.Subscribe(action).AddTo(component);
+
+    public static Texture2D TakeScreenshot(MarkerData data, RectTransform rectTransform)
+    {
+        Vector2 imageSize = rectTransform.sizeDelta;
+        Vector3 imageTopLeft = rectTransform.position - new Vector3(imageSize.x * rectTransform.pivot.x, imageSize.y * rectTransform.pivot.y, 0f);
+
+        Texture2D screenshot = new Texture2D((int)imageSize.x, (int)imageSize.y, TextureFormat.RGB24, false);
+
+        screenshot.ReadPixels(new Rect(imageTopLeft.x, imageTopLeft.y, imageSize.x, imageSize.y), 0, 0);
+        screenshot.Apply();
+
+        NativeGallery.SaveImageToGallery(screenshot, Path.ALBUM, data.Name);
+
+        return screenshot;
+    }
 
     public static void SwapValue<T>(ref T origin, ref T last)
     {

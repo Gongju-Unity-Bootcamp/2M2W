@@ -15,6 +15,8 @@ public class ViewNavPopup : UIPopup
 
     private enum Images
     {
+        Mask,
+
         Button_01,
         Button_02,
         Button_03,
