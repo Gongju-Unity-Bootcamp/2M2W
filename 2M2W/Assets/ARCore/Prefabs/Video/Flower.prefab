@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7177918112446067072}
   - component: {fileID: 2377223784612875340}
   - component: {fileID: 7696679228835502225}
-  - component: {fileID: 3792718907595241985}
+  - component: {fileID: 6052766744028438332}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -134,7 +134,7 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: https://www.youtube.com/watch?v=qzFLl2ZoUvY
+  m_Url: 
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
@@ -144,7 +144,7 @@ VideoPlayer:
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
---- !u!114 &3792718907595241985
+--- !u!114 &6052766744028438332
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,9 +153,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6978985956791847246}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bae3ee6d00f5b24d9f91cb7fe86c147, type: 3}
+  m_Script: {fileID: 11500000, guid: 3768fe280903842fdaa2a016022624f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  youtubeUrl: https://www.youtube.com/watch?v=qzFLl2ZoUvY
+  is360Video: 0
+  cli: 1
 --- !u!1 &7990620044905159223
 GameObject:
   m_ObjectHideFlags: 0
