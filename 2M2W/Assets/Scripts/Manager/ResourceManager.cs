@@ -7,6 +7,7 @@ public class ResourceManager
 {
     public Dictionary<string, GameObject> Prefabs { get; set; }
     public Dictionary<string, Texture> Textures { get; set; }
+    public Dictionary<string, RenderTexture> RenderTextures { get; set; }
     public Dictionary<string, RawImage> RawImages { get; private set; }
     public Dictionary<string, Image> Images { get; private set; }
     public Dictionary<string, Sprite> Sprites { get; set; }
@@ -16,6 +17,7 @@ public class ResourceManager
     {
         Prefabs = new Dictionary<string, GameObject>();
         Textures = new Dictionary<string, Texture>();
+        RenderTextures = new Dictionary<string, RenderTexture>();
         RawImages = new Dictionary<string, RawImage>();
         Images = new Dictionary<string, Image>();
         Sprites = new Dictionary<string, Sprite>();
@@ -38,8 +40,11 @@ public class ResourceManager
     public GameObject LoadPrefab(string path)
         => Load(Prefabs, string.Concat(Path.PREFAB, path));
 
-    public Texture LoadTextures(string path)
+    public Texture LoadTexture(string path)
         => Load(Textures, string.Concat(Path.TEXTURE, path));
+
+    public Texture LoadRenderTexture(string path)
+    => Load(RenderTextures, string.Concat(Path.RENDERTEXTURE, path));
 
     public RawImage LoadRawImage(string path)
         => Load(RawImages, string.Concat(Path.RAWIMAGE, path));

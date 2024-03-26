@@ -45,9 +45,6 @@ public class ArNavPopup : UIPopup
             case Buttons.Button_02b:
                 Managers.UI.OpenPopup<NavPopup>();
                 break;
-            case Buttons.Button_03b:
-                Managers.UI.OpenPopup<ArNavPopup>();
-                break;
             case Buttons.Button_04b:
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;

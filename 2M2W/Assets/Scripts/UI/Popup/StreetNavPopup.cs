@@ -22,6 +22,11 @@ public class StreetNavPopup : UIPopup
         Text_03
     }
 
+    private enum RawImages
+    {
+        RawImage
+    }
+
     private enum Buttons
     {
         SearchButton,
@@ -31,7 +36,10 @@ public class StreetNavPopup : UIPopup
         Button_03, 
         Button_04,
 
+        NavModeIcon,
         CurrentPosIcon,
+        PlusIcon,
+        MinusIcon,
         CancelButton,
 
         Button,
@@ -58,6 +66,7 @@ public class StreetNavPopup : UIPopup
 
         BindObject(typeof(Objects));
         BindText(typeof(Texts));
+        BindRawImage(typeof(RawImages));
         BindButton(typeof(Buttons));
         BindInputField(typeof(InputFields));
 
@@ -73,6 +82,10 @@ public class StreetNavPopup : UIPopup
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
         }
+
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnClickRawImage, ViewEvent.Click, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
 
         inputs = new TMP_InputField[Enum.GetValues(typeof(InputFields)).Length];
 
@@ -142,22 +155,39 @@ public class StreetNavPopup : UIPopup
                 break;
             case Buttons.Button_01:
                 GetFindLocation(BingRouteMode.Driving);
+                Managers.App.BingRouteMode = BingRouteMode.Driving;
                 break;
             case Buttons.Button_02:
                 GetFindLocation(BingRouteMode.Walking);
+                Managers.App.BingRouteMode = BingRouteMode.Walking;
                 break;
             case Buttons.Button_03:
                 GetFindLocation(BingRouteMode.Transit);
+                Managers.App.BingRouteMode = BingRouteMode.Transit;
                 break;
             case Buttons.Button_04:
                 GetFindLocation(BingRouteMode.Bicycling);
+                Managers.App.BingRouteMode = BingRouteMode.Bicycling;
+                break;
+            case Buttons.NavModeIcon:
+                Managers.App.SetNavMode();
                 break;
             case Buttons.CurrentPosIcon:
-                LatLon latlon = Managers.App.MapLocationService.GetLatLon();
-                if (latlon != default)
+                LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+                if (latLon != default)
                 {
-                    Managers.App.MapRenderer.Center = latlon;
+                    Managers.App.MapRenderer.Center = latLon;
                 }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
+                }
+                break;
+            case Buttons.PlusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
+                break;
+            case Buttons.MinusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
                 break;
             case Buttons.CancelButton:
                 Managers.UI.ClosePopupUI();
@@ -166,20 +196,67 @@ public class StreetNavPopup : UIPopup
                 string str = inputs[0].text;
                 inputs[0].text = inputs[1].text;
                 inputs[1].text = str;
+                obj.SetActive(false);
                 break;
             case Buttons.NavStart:
                 MapPin startPin = Managers.Resource.Instantiate("StartPin").GetComponent<MapPin>();
                 startPin.Location = Managers.App.startLatLon;
+                startPin.IsLayerSynchronized = false;
                 mapPins.Add(startPin);
                 MapPin endPin = Managers.Resource.Instantiate("EndPin").GetComponent<MapPin>();
                 endPin.Location = Managers.App.endLatLon;
+                endPin.IsLayerSynchronized = false;
                 mapPins.Add(endPin);
                 GetRenderRoute();
+                Managers.UI.OpenPopup<ViewNavPopup>();
                 break;
         }
 
         searchButton.gameObject.SetActive(false);
         Managers.Sound.Play(SoundID.ButtonClick);
+    }
+
+    private void OnDragRawImage(PointerEventData eventData)
+    {
+        Vector2 dragDelta = -eventData.delta * Managers.App.polatedValue;
+
+        Managers.App.MapController.Pan(dragDelta, false);
+    }
+
+    private void OnClickRawImage(PointerEventData eventData)
+    {
+        Ray ray = eventData.GetRay();
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            GameObject gameObject = hit.collider.GetComponentInChildren<Button>().gameObject;
+
+            if (gameObject != null)
+            {
+                ExecuteEvents.Execute(gameObject, eventData, ExecuteEvents.pointerClickHandler);
+            }
+        }
+    }
+
+    private void OnDoubleClickRawImage(PointerEventData eventData)
+    {
+        if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
+        {
+            LatLon latLon = new LatLon(hitInfo.Location.LatitudeInDegrees, hitInfo.Location.LongitudeInDegrees);
+            ObservableList<MapPin> mapPins = Managers.App.PopupPinLayer.MapPins;
+
+            if (mapPins.Count > 0)
+            {
+                mapPins.Clear();
+            }
+            else
+            {
+                MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
+                mapPin.Location = latLon;
+                mapPin.IsLayerSynchronized = false;
+                mapPins.Add(mapPin);
+            }
+        }
     }
 
     private void OnChangedInputField(string addressName, TMP_InputField inputField)
@@ -214,9 +291,9 @@ public class StreetNavPopup : UIPopup
                     {
                         if (false == string.IsNullOrEmpty(routeLeg.travelMode))
                         {
-                            GetText((int)Texts.Text_01).text = $"{routeLeg.travelDuration} {resourceRoute.durationUnit}";
-                            GetText((int)Texts.Text_02).text = $"{routeLeg.travelDistance} {resourceRoute.distanceUnit}";
-                            GetText((int)Texts.Text_03).text = $"{routeLeg.travelMode}";
+                            GetText((int)Texts.Text_01).text = $"{Utilities.ConvertToSecondsToTime(routeLeg.travelDuration)}";
+                            GetText((int)Texts.Text_02).text = $"{Utilities.ConvertToDistanceString(routeLeg.travelDistance)}";
+                            GetText((int)Texts.Text_03).text = $"{Utilities.ConvertToKorean(routeLeg.travelMode)}";
                             obj.SetActive(true);
 
                             Managers.App.itineraryItems = routeLeg.itineraryItems;
@@ -272,12 +349,11 @@ public class StreetNavPopup : UIPopup
             MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
             mapPin.transform.Find("Root").gameObject.SetActive(false);
             mapPin.Location = latLon;
+            mapPin.IsLayerSynchronized = false;
             mapPins.Add(mapPin);
         }
 
         Managers.App.MapLineRenderer.gameObject.SetActive(true);
-        Managers.App.MapRenderer.ZoomLevel = 1f;
-        Managers.App.MapRenderer.Center = Managers.App.endLatLon;
         Managers.App.MapRenderer.Center = Managers.App.startLatLon;
     }
 }

@@ -1,10 +1,7 @@
-using Microsoft.Maps.Unity.Search;
 using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
-using System.Threading.Tasks;
 using System;
 using UnityEngine.EventSystems;
-using UnityEngine.Android;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -17,19 +14,22 @@ public class NavPopup : UIPopup
 
     private enum Buttons
     {
-        Button_Up,
-        Button_Down,
-        Button_Left,
-        Button_Right,
+        ReportButton,
 
         NavModeIcon,
         CurrentPosIcon,
         EnlargementIcon,
+        PlusIcon,
+        MinusIcon,
 
         Button_01, 
         Button_02, 
         Button_03, 
-        Button_04, 
+        Button_04,
+        Button_05,
+        Button_06,
+        Button_07,
+        Button_08,
 
         Button_01b,
         Button_02b,
@@ -52,12 +52,9 @@ public class NavPopup : UIPopup
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
         }
 
-        foreach (RawImages rawImageIndex in Enum.GetValues(typeof(RawImages)))
-        {
-            RawImage rawImage = GetRawImage((int)rawImageIndex);
-            rawImage.BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
-            rawImage.BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
-        }
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDragRawImage, ViewEvent.Drag, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnClickRawImage, ViewEvent.Click, this);
+        GetRawImage((int)RawImages.RawImage).BindViewEvent(OnDoubleClickRawImage, ViewEvent.DoubleClick, this);
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -71,37 +68,59 @@ public class NavPopup : UIPopup
     {
         switch (button)
         {
-            case Buttons.Button_Up:
-                Managers.App.MapController.PanNorth();
-                break;
-            case Buttons.Button_Down:
-                Managers.App.MapController.PanSouth();
-                break;
-            case Buttons.Button_Left:
-                Managers.App.MapController.PanWest();
-                break;
-            case Buttons.Button_Right:
-                Managers.App.MapController.PanEast();
+            case Buttons.ReportButton:
+                Application.OpenURL("tel://112");
                 break;
             case Buttons.NavModeIcon:
-                Managers.App.GetNavMode();
+                Managers.App.SetNavMode();
                 break;
             case Buttons.CurrentPosIcon:
-                LatLon latlon = Managers.App.MapLocationService.GetLatLon();
-                if (latlon != default)
+                LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+                if (latLon != default)
                 {
-                    Managers.App.MapRenderer.Center = latlon;
+                    Managers.App.MapRenderer.Center = latLon;
+                }
+                else
+                {
+                    Managers.UI.OpenPopup<ConsentPopup>();
                 }
                 break;
             case Buttons.EnlargementIcon:
                 Managers.UI.OpenPopup<StreetNavPopup>();
                 break;
+            case Buttons.PlusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.maxZoom;
+                break;
+            case Buttons.MinusIcon:
+                Managers.App.MapRenderer.ZoomLevel = MapController.minZoom;
+                break;
+            case Buttons.Button_01:
+                Managers.App.EnableMarkerPin(0);
+                break;
+            case Buttons.Button_02:
+                Managers.App.EnableMarkerPin(1);
+                break;
+            case Buttons.Button_03:
+                Managers.App.EnableMarkerPin(2);
+                break;
+            case Buttons.Button_04:
+                Managers.App.EnableMarkerPin(3);
+                break;
+            case Buttons.Button_05:
+                Managers.App.EnableMarkerPin(4);
+                break;
+            case Buttons.Button_06:
+                Managers.App.EnableMarkerPin(5);
+                break;
+            case Buttons.Button_07:
+                Managers.App.EnableMarkerPin(6);
+                break;
+            case Buttons.Button_08:
+                Managers.App.EnableMarkerPin(7);
+                break;
             case Buttons.Button_01b:
                 Managers.UI.CloseAllPopupUI();
                 Managers.UI.OpenPopup<MainPopup>();
-                break;
-            case Buttons.Button_02b:
-                Managers.UI.OpenPopup<NavPopup>();
                 break;
             case Buttons.Button_03b:
                 Managers.UI.OpenPopup<ArNavPopup>();
@@ -124,6 +143,21 @@ public class NavPopup : UIPopup
         Managers.App.MapController.Pan(dragDelta, false);
     }
 
+    private void OnClickRawImage(PointerEventData eventData)
+    {
+        Ray ray = eventData.GetRay();
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            GameObject gameObject = hit.collider.GetComponentInChildren<Button>().gameObject;
+
+            if (gameObject != null)
+            {
+                ExecuteEvents.Execute(gameObject, eventData, ExecuteEvents.pointerClickHandler);
+            }
+        }
+    }
+
     private void OnDoubleClickRawImage(PointerEventData eventData)
     {
         if (Managers.App.MapRenderer.Raycast(eventData.GetRay(), out MapRendererRaycastHit hitInfo))
@@ -139,6 +173,7 @@ public class NavPopup : UIPopup
             {
                 MapPin mapPin = Managers.Resource.Instantiate("MapPin").GetComponent<MapPin>();
                 mapPin.Location = latLon;
+                mapPin.IsLayerSynchronized = false;
                 mapPins.Add(mapPin);
             }
         }

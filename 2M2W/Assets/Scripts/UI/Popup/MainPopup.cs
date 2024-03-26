@@ -7,6 +7,8 @@ public class MainPopup : UIPopup
 {
     private enum Buttons
     {
+        ReportButton,
+
         Button_01,
         Button_02,
         Button_03,
@@ -44,6 +46,9 @@ public class MainPopup : UIPopup
     {
         switch (button)
         {
+            case Buttons.ReportButton:
+                Application.OpenURL("tel://112");
+                break;
             case Buttons.Button_01:
                 Managers.UI.OpenPopup<NavPopup>();
                 break;

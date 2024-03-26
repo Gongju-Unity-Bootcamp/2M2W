@@ -4,20 +4,15 @@ using UnityEngine;
 
 public class MapLocationService : MonoBehaviour
 {
-    private const float desiredAccuracyInMeters = 10f, updateDistanceInMeters = 1f;
+    public const float desiredAccuracyInMeters = 10f, updateDistanceInMeters = 1f, perSeconds = 60f;
 
     private LocationService locationService;
 
-    private void Awake()
-        => locationService = Input.location;
-
-    private void Start()
-        => StartLocationService();
-
     public void StartLocationService(string permissionName = null)
     {
-        if (Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+        if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
+            locationService = Input.location;
             locationService.Start(desiredAccuracyInMeters, updateDistanceInMeters);
         }
         else
@@ -70,4 +65,7 @@ public class MapLocationService : MonoBehaviour
                 return new LatLon(locationService.lastData.latitude, locationService.lastData.longitude);
         }
     }
+
+    private void OnDestroy()
+        => StopLocationService();
 }
