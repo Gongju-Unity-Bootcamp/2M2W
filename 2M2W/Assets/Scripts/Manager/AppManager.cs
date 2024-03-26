@@ -35,7 +35,7 @@ public class AppManager : MonoBehaviour
 
     [HideInInspector] public PermissionCallbacks callbacks;
     private float currentTime;
-    private bool isCooldown;
+    private bool isCooldown, isOpenPopup;
 
     public void Init() 
     {
@@ -78,14 +78,15 @@ public class AppManager : MonoBehaviour
         {
             Managers.UI.OpenPopup<PermitPopup>();
         }
-        else if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            Managers.UI.OpenPopup<InternetConnectPopup>();
-        }
         else
         {
             Managers.UI.OpenPopup<MainPopup>();
             Managers.Sound.Play(SoundID.MainBGM);
+
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                Managers.UI.OpenPopup<InternetConnectPopup>();
+            }
 
             GetDeviceLocation();
             SetNavMode();
@@ -95,8 +96,9 @@ public class AppManager : MonoBehaviour
 
     private void Update()
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable)
+        if (false == isOpenPopup && Application.internetReachability == NetworkReachability.NotReachable)
         {
+            isOpenPopup = true;
             Managers.UI.OpenPopup<InternetConnectPopup>();
         }
 
