@@ -54,6 +54,7 @@ public class AppManager : MonoBehaviour
         MapPinSubLayer = BingMap.AddComponent<MapPinLayer>();
         PopupPinLayer = BingMap.AddComponent<MapPinLayer>();
         MarkerPinLayer = BingMap.AddComponent<MapPinLayer>();
+        
         MapLineRenderer = Managers.Resource.Instantiate("MapLineRenderer").GetComponent<MapLineRenderer>();
 
         MapPinLayer.LayerName = nameof(MapPinLayer);

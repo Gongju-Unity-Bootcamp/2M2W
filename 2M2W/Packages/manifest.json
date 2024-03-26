@@ -6,9 +6,15 @@
       "scopes": [
         "com.microsoft.maps"
       ]
+    },
+    {
+      "name": "iBicha",
+      "url": "https://registry.npmjs.com",
+      "scopes": [ "com.ibicha" ]
     }
   ],
   "dependencies": {
+    "com.ibicha.youtube-player": "2.0.2",
     "com.microsoft.maps.unity": "0.11.2",
     "com.microsoft.maps.unity.urp": "https://github.com/microsoft/MapsSDK-Unity.git?path=/UPM/com.microsoft.maps.unity.urp",
     "com.unity.ai.navigation": "1.1.5",

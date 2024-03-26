@@ -339,6 +339,8 @@ public class StreetNavPopup : UIPopup
 
     private void GetRenderRoute()
     {
+        Managers.App.MapLineRenderer.gameObject.SetActive(false);
+
         ObservableList<MapPin> mapPins = Managers.App.MapPinSubLayer.MapPins;
 
         foreach (ItineraryItem itineraryItem in Managers.App.itineraryItems)

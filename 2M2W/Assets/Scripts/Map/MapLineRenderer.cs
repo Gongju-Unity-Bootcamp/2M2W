@@ -22,7 +22,7 @@ public class MapLineRenderer : MonoBehaviour
     }
 
     private void OnEnable()
-        => Managers.App.MapRenderer.ZoomLevel = 1f;
+        => lineRenderer.positionCount = mapPins.Count;
 
     private void Update()
     {

@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.ibicha.youtube-player": {
+      "version": "file:com.ibicha.youtube-player",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      }
+    },
     "com.microsoft.maps.unity": {
       "version": "0.11.2",
       "depth": 0,
