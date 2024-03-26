@@ -71,19 +71,18 @@ public class AppManager : MonoBehaviour
         if (false == Permission.HasUserAuthorizedPermission(Permission.FineLocation)
             || false == Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
-            Managers.UI.OpenPopup<PermitPopup>();
             MapLocationService.StartLocationService();
             CameraService.StartCameraService();
+            Managers.UI.OpenPopup<PermitPopup>();
         }
-        else if (Application.internetReachability == NetworkReachability.NotReachable)
+
+        if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             Managers.UI.OpenPopup<InternetConnectPopup>();
         }
-        else
-        {
-            Managers.UI.OpenPopup<MainPopup>();
-            Managers.Sound.Play(SoundID.MainBGM);
-        }
+
+        Managers.UI.OpenPopup<MainPopup>();
+        Managers.Sound.Play(SoundID.MainBGM);
 
         GetDeviceLocation();
         SetNavMode();
@@ -168,7 +167,4 @@ public class AppManager : MonoBehaviour
         MarkerPinLayer.MapPins.Clear();
         SetMapMarker(index);
     }
-
-    private void OnDestroy()
-        => MapLocationService.StopLocationService();
 }

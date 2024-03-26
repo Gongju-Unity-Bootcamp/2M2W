@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class CameraService : MonoBehaviour
 {
-    private void Start()
-        => StartCameraService();
-
     public void StartCameraService(string permissionName = null)
     {
         if (false == Permission.HasUserAuthorizedPermission(Permission.Camera))

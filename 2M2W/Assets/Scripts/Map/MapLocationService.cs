@@ -8,16 +8,11 @@ public class MapLocationService : MonoBehaviour
 
     private LocationService locationService;
 
-    private void Awake()
-        => locationService = Input.location;
-
-    private void Start()
-        => StartLocationService();
-
     public void StartLocationService(string permissionName = null)
     {
         if (true == Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
+            locationService = Input.location;
             locationService.Start(desiredAccuracyInMeters, updateDistanceInMeters);
         }
         else
@@ -70,4 +65,7 @@ public class MapLocationService : MonoBehaviour
                 return new LatLon(locationService.lastData.latitude, locationService.lastData.longitude);
         }
     }
+
+    private void OnDestroy()
+        => StopLocationService();
 }
