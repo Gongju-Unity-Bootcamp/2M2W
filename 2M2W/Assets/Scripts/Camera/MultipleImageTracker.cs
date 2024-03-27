@@ -59,5 +59,4 @@ public class MultipleImageTracker : MonoBehaviour
 
         objDic[referenceName].SetActive(true);
     }
-
 }

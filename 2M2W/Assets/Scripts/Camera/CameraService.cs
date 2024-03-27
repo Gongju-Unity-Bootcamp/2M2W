@@ -1,11 +1,9 @@
+using System.Collections.Generic;
+using Unity.Jobs;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.Android;
 using UnityEngine;
-using System.Collections.Generic;
-#if UNITY_EDITOR
-using UnityEditor.XR.ARSubsystems;
-#endif
 
 public class CameraService : MonoBehaviour
 {
@@ -14,13 +12,16 @@ public class CameraService : MonoBehaviour
     private Camera subCamera;
     private ARTrackedImageManager imageManager;
     private MultipleImageTracker tracker;
+    private MutableRuntimeReferenceImageLibrary library;
     public bool isUpdateCamera;
 
     private void Awake()
     {
         subCamera = GameObject.FindGameObjectWithTag("SubCamera").GetComponent<Camera>();
         imageManager = GetComponent<ARTrackedImageManager>();
+        imageManager.enabled = false;
         tracker = GetComponent<MultipleImageTracker>();
+        library = imageManager.CreateRuntimeLibrary() as MutableRuntimeReferenceImageLibrary;
     }
 
     private void Start()
@@ -40,9 +41,22 @@ public class CameraService : MonoBehaviour
         for (int index = 0; index < docents.Count; ++index)
         {
             tracker.placeablePrefabs[index] = Managers.Resource.LoadDocent(docents[index].Ref);
+            Texture2D texture = Managers.Resource.LoadTexture2D(docents[index].Ref);
+
+            AddImageToLibrary(texture, docents[index].Name);
         }
 
+        imageManager.referenceLibrary = library;
+        imageManager.enabled = true;
+
         StartCameraService();
+    }
+
+    private void AddImageToLibrary(Texture2D texture, string name)
+    {
+        AddReferenceImageJobState jobState = library.ScheduleAddImageWithValidationJob(texture, name, null);
+        JobHandle handle = jobState.jobHandle;
+        handle.Complete();
     }
 
     public void StartCameraService(string permissionName = null)
