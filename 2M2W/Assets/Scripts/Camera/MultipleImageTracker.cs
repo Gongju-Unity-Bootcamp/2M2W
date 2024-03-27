@@ -11,10 +11,16 @@ public class MultipleImageTracker : MonoBehaviour
 
     private void Awake()
     {
-        trackedImageManager = GetComponent<ARTrackedImageManager>();
+        trackedImageManager = gameObject.GetComponent<ARTrackedImageManager>();
         objDic = new Dictionary<string, GameObject>();
+    }
 
-        foreach(GameObject obj in placeablePrefabs)
+    private void OnEnable()
+        => trackedImageManager.trackedImagesChanged += OnTrackedImageChanged;
+
+    public void AddPlacablePrefab()
+    {
+        foreach (GameObject obj in placeablePrefabs)
         {
             GameObject newObject = Instantiate(obj);
             newObject.name = obj.name;
@@ -22,21 +28,13 @@ public class MultipleImageTracker : MonoBehaviour
 
             objDic.Add(newObject.name, newObject);
         }
-    }
 
-    private void OnEnable()
-    {
         trackedImageManager.trackedImagesChanged += OnTrackedImageChanged;
-    }
-
-    private void OnDisable()
-    {
-        trackedImageManager.trackedImagesChanged -= OnTrackedImageChanged;
     }
 
     private void OnTrackedImageChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        foreach(ARTrackedImage trackedImage in eventArgs.added)
+        foreach (ARTrackedImage trackedImage in eventArgs.added)
         {
             UpdateObject(trackedImage);
         }
@@ -54,9 +52,17 @@ public class MultipleImageTracker : MonoBehaviour
     {
         string referenceName = trackedImage.referenceImage.name;
 
+        if (referenceName == null)
+        {
+            return;
+        }
+
         objDic[referenceName].transform.position = trackedImage.transform.position;
         objDic[referenceName].transform.rotation = trackedImage.transform.rotation;
 
         objDic[referenceName].SetActive(true);
     }
+
+    private void OnDisable()
+        => trackedImageManager.trackedImagesChanged -= OnTrackedImageChanged;
 }

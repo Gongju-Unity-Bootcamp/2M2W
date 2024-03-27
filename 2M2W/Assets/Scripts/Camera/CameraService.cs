@@ -17,7 +17,7 @@ public class CameraService : MonoBehaviour
 
     private void Awake()
     {
-        subCamera = GameObject.FindGameObjectWithTag("SubCamera").GetComponent<Camera>();
+        subCamera = GetComponentInChildren<Camera>();
         imageManager = GetComponent<ARTrackedImageManager>();
         imageManager.enabled = false;
         tracker = GetComponent<MultipleImageTracker>();
@@ -43,18 +43,19 @@ public class CameraService : MonoBehaviour
             tracker.placeablePrefabs[index] = Managers.Resource.LoadDocent(docents[index].Ref);
             Texture2D texture = Managers.Resource.LoadTexture2D(docents[index].Ref);
 
-            AddImageToLibrary(texture, docents[index].Name);
+            AddImageToLibrary(texture, docents[index].Ref);
         }
 
         imageManager.referenceLibrary = library;
         imageManager.enabled = true;
+        tracker.AddPlacablePrefab();
 
         StartCameraService();
     }
 
     private void AddImageToLibrary(Texture2D texture, string name)
     {
-        AddReferenceImageJobState jobState = library.ScheduleAddImageWithValidationJob(texture, name, null);
+        AddReferenceImageJobState jobState = library.ScheduleAddImageWithValidationJob(texture, name, 0.1f);
         JobHandle handle = jobState.jobHandle;
         handle.Complete();
     }

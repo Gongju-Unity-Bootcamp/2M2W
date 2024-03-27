@@ -71,6 +71,8 @@ public class ArNavDetailsPopup : UIPopup
                 Managers.UI.OpenPopup<StreetNavPopup>();
                 break;
             case Buttons.Button_02:
+                ArNavPlayPopup popup = Managers.UI.OpenPopup<ArNavPlayPopup>();
+                popup.data = data;
                 break;
             case Buttons.Button_01b:
                 Managers.UI.CloseAllPopupUI();

@@ -19,6 +19,8 @@ public class ArNavPlayPopup : UIPopup
         BackButton
     }
 
+    public MarkerData data;
+    
     public override void Init()
     {
         base.Init();
@@ -61,5 +63,7 @@ public class ArNavPlayPopup : UIPopup
                 Managers.UI.ClosePopupUI();
                 break;
         }
+
+        Managers.Sound.Play(SoundID.ButtonClick);
     }
 }
