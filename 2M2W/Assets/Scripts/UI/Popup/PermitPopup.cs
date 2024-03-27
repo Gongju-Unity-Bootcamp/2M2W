@@ -36,6 +36,7 @@ public class PermitPopup : UIPopup
             case Buttons.Button:
                 Managers.UI.ClosePopupUI();
                 Managers.UI.OpenPopup<MainPopup>();
+                Managers.App.XROrigin.Camera.gameObject.SetActive(true);
                 Managers.Sound.Play(SoundID.MainBGM);
                 Managers.App.isOpenPopup = true;
                 break;

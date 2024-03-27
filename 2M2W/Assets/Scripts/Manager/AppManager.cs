@@ -44,6 +44,7 @@ public class AppManager : MonoBehaviour
         XROrigin = subCamera.GetComponent<XROrigin>();
         XRManager = Managers.Resource.Instantiate("XRManager").GetComponent<XRInteractionManager>();
         CameraService = subCamera.GetComponent<CameraService>();
+        XROrigin.Camera.gameObject.SetActive(false);
 
         GameObject BingMap = Managers.Resource.Instantiate("BingMap");
         MapSession = BingMap.GetComponent<MapSession>();
@@ -75,13 +76,14 @@ public class AppManager : MonoBehaviour
         callbacks = new PermissionCallbacks();
 
         if (false == Permission.HasUserAuthorizedPermission(Permission.FineLocation)
-            || false == Permission.HasUserAuthorizedPermission(Permission.Camera))
+        || false == Permission.HasUserAuthorizedPermission(Permission.Camera))
         {
             Managers.UI.OpenPopup<PermitPopup>();
         }
         else
         {
             Managers.UI.OpenPopup<MainPopup>();
+            XROrigin.Camera.gameObject.SetActive(true);
             Managers.Sound.Play(SoundID.MainBGM);
 
             isOpenPopup = true;

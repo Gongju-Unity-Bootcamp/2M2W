@@ -49,7 +49,6 @@ public class CameraService : MonoBehaviour
         imageManager.referenceLibrary = library;
         imageManager.enabled = true;
         tracker.AddPlacablePrefab();
-
         StartCameraService();
     }
 

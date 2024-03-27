@@ -1,3 +1,4 @@
+using Microsoft.Geospatial;
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -33,6 +34,17 @@ public class ArNavPlayPopup : UIPopup
             Button button = GetButton((int)buttonIndex);
             button.BindViewEvent(OnClickButton, ViewEvent.Click, this);
         }
+
+        LatLon latLon = Managers.App.MapLocationService.GetLatLon();
+        if (latLon != default)
+        {
+            GetRawImage((int)RawImages.XRImage).texture = Managers.Resource.LoadRenderTexture("XRCamera");
+        }
+        else
+        {
+            GetRawImage((int)RawImages.XRImage).texture = Managers.Resource.LoadSprite("spr_DownloadBackground").texture;
+        }
+
     }
 
     private void OnClickButton(PointerEventData eventData)
