@@ -19,6 +19,11 @@ public class ARPlaceOnPlane : MonoBehaviour
 
     private void Update()
     {
+        if (false == Managers.App.updateLatLon)
+        {
+            return;
+        }
+
         Camera sub = Managers.App.CameraService.SubCamera;
         Vector3 screenCenter = sub.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
         List<ARRaycastHit> hits = new List<ARRaycastHit>();

@@ -14,8 +14,6 @@ public class CameraService : MonoBehaviour
 
     private ARTrackedImageManager imageManager;
     private MultipleImageTracker tracker;
-    //private XRReferenceImageLibrary referenceImages;
-    //private MutableRuntimeReferenceImageLibrary library;
     public bool isUpdateCamera;
 
     private void Awake()
@@ -24,8 +22,6 @@ public class CameraService : MonoBehaviour
         imageManager = GetComponent<ARTrackedImageManager>();
         imageManager.enabled = false;
         tracker = GetComponent<MultipleImageTracker>();
-        //referenceImages = (XRReferenceImageLibrary)imageManager.referenceLibrary;
-        //library = imageManager.CreateRuntimeLibrary(referenceImages) as MutableRuntimeReferenceImageLibrary;
     }
 
     private void Start()
@@ -45,34 +41,13 @@ public class CameraService : MonoBehaviour
         for (int index = 0; index < docents.Count; ++index)
         {
             tracker.placeablePrefabs[index] = Managers.Resource.LoadDocent(docents[index].Ref);
-
-            //Texture2D texture = Managers.Resource.LoadTexture2D(docents[index].Ref);
-            //AddImageToLibrary(texture, docents[index].Ref);
         }
 
-        //imageManager.referenceLibrary = library;
         imageManager.requestedMaxNumberOfMovingImages = docents.Count;
         imageManager.enabled = true;
         tracker.AddPlacablePrefab();
         StartCameraService();
     }
-
-    //private void AddImageToLibrary(Texture2D texture, string name)
-    //{
-    //    NativeArray<byte> imageData = new NativeArray<byte>(texture.GetRawTextureData<byte>(), Allocator.Persistent);
-        
-    //    int originWidth = texture.width;
-    //    int originHeight = texture.height;
-    //    int newWidth = 1;
-    //    int newHeight = Mathf.RoundToInt((float)newWidth / originWidth * originHeight);
-
-    //    Vector2Int size = new Vector2Int(newWidth, newHeight);
-    //    XRReferenceImage referenceImage = new XRReferenceImage(new SerializableGuid(), new SerializableGuid(), size, name, texture);
-    //    AddReferenceImageJobState state = library.ScheduleAddImageWithValidationJob(imageData, size, texture.format, referenceImage);
-
-    //    state.jobHandle.Complete();
-    //    imageData.Dispose();
-    //}
 
     public void StartCameraService(string permissionName = null)
     {

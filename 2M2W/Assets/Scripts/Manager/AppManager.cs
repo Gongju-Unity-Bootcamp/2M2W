@@ -106,19 +106,21 @@ public class AppManager : MonoBehaviour
             Managers.UI.OpenPopup<InternetConnectPopup>();
         }
 
-        if (true == updateLatLon)
+        if (false == updateLatLon)
         {
-            if (false == isCooldown)
-            {
-                isCooldown = true;
-                currentTime += Time.deltaTime;
+            return;
+        }
 
-                if (currentTime > MapLocationService.perSeconds)
-                {
-                    isCooldown = false;
-                    MapPin.Location = MapLocationService.GetLatLon();
-                    currentTime = 0;
-                }
+        if (false == isCooldown)
+        {
+            isCooldown = true;
+            currentTime += Time.deltaTime;
+
+            if (currentTime > MapLocationService.perSeconds)
+            {
+                isCooldown = false;
+                MapPin.Location = MapLocationService.GetLatLon();
+                currentTime = 0;
             }
         }
     }

@@ -31,10 +31,7 @@ public class ArNavSubItem : UISubItem
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        Texture2D texture = Managers.Resource.LoadTexture2D(data.Ref);
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
-        
-        GetImage((int)Images.DocentImage).sprite = sprite;
+        GetImage((int)Images.DocentImage).sprite = Managers.Resource.LoadSprite(data.Path);
 
         GetText((int)Texts.Text_01).text = data.Name;
         GetText((int)Texts.Text_02).text = data.Desc;
