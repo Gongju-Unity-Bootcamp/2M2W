@@ -2,9 +2,16 @@ using Microsoft.Geospatial;
 using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine;
 
 public class ArNavPlayPopup : UIPopup
 {
+    private enum Images
+    {
+        Mask,
+        ScrollView
+    }
+
     private enum RawImages
     {
         XRImage
@@ -16,16 +23,22 @@ public class ArNavPlayPopup : UIPopup
         Button_02b,
         Button_03b,
         Button_04b,
-    
+
+        ScreenshotButton,
+        RecordButton,
+
         BackButton
     }
 
     public MarkerData data;
-    
+    private ScrollRect rect;
+    private bool isRecord, playEffect;
+
     public override void Init()
     {
         base.Init();
 
+        BindImage(typeof(Images));
         BindRawImage(typeof(RawImages));
         BindButton(typeof(Buttons));
 
@@ -45,6 +58,18 @@ public class ArNavPlayPopup : UIPopup
             GetRawImage((int)RawImages.XRImage).texture = Managers.Resource.LoadSprite("spr_DownloadBackground").texture;
         }
 
+        rect = GetComponentInChildren<ScrollRect>();
+        rect.onValueChanged.AddListener(OnDrag);
+    }
+
+    private void OnDrag(Vector2 vector)
+    {
+        if (true == isRecord)
+        {
+            isRecord = false;
+            Managers.Sound.Play(SoundID.RecordEnd);
+            GetButton((int)Buttons.RecordButton).image.sprite = Managers.Resource.LoadSprite("spr_RecordStart");
+        }
     }
 
     private void OnClickButton(PointerEventData eventData)
@@ -71,11 +96,43 @@ public class ArNavPlayPopup : UIPopup
             case Buttons.Button_04b:
                 Managers.UI.OpenPopup<ArRoadViewPopup>();
                 break;
+            case Buttons.ScreenshotButton:
+                if (false == isRecord)
+                {
+                    playEffect = true;
+                    Managers.Sound.Play(SoundID.Screenshot);
+                    RectTransform rectScreenshot = GetImage((int)Images.Mask).rectTransform;
+                    Texture2D texture = Utilities.TakeScreenshot(data, rectScreenshot);
+                }
+                break;
+            case Buttons.RecordButton:
+                playEffect = true;
+                RectTransform rectRecord = GetImage((int)Images.Mask).rectTransform;
+                if (false == isRecord)
+                {
+                    isRecord = true;
+                    Managers.Sound.Play(SoundID.RecordStart);
+                    GetButton((int)button).image.sprite = Managers.Resource.LoadSprite("spr_RecordEnd");
+                }
+                else
+                {
+                    isRecord = false;
+                    Managers.Sound.Play(SoundID.RecordEnd);
+                    GetButton((int)button).image.sprite = Managers.Resource.LoadSprite("spr_RecordStart");
+                }
+                break;
             case Buttons.BackButton:
                 Managers.UI.ClosePopupUI();
                 break;
         }
 
-        Managers.Sound.Play(SoundID.ButtonClick);
+        if (false == playEffect)
+        {
+            Managers.Sound.Play(SoundID.ButtonClick);
+        }
+        else
+        {
+            playEffect = false;
+        }
     }
 }

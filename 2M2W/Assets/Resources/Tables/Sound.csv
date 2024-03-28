@@ -1,6 +1,9 @@
 Id,Name,Volume
 101,MainBGM,0.7
 102,TitleBGM,0.7
-103,ArNavBGM,0.7
+103,RoadBGM,0.7
 1001,ButtonClick,1
 1002,ButtonBack,1
+1003,Screenshot,1
+1004,RecordStart,1
+1005,RecordEnd,1

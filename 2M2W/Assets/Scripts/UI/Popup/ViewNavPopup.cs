@@ -99,6 +99,8 @@ public class ViewNavPopup : UIPopup
             GetRawImage((int)RawImages.XRImage).texture = Managers.Resource.LoadSprite("spr_DownloadBackground").texture;
         }
 
+        Managers.Sound.Stop(SoundType.BGM);
+        Managers.Sound.Play(SoundID.RoadBGM);
         Managers.UI.OpenPopup<FindPathPopup>();
     }
 
@@ -135,6 +137,8 @@ public class ViewNavPopup : UIPopup
                 Managers.App.PopupPinLayer.MapPins.Remove(Managers.App.MapPin);
                 Managers.App.BingRouteMode = BingRouteMode.None;
                 Managers.UI.ClosePopupUI();
+                Managers.Sound.Stop(SoundType.BGM);
+                Managers.Sound.Play(SoundID.MainBGM);
                 break;
         }
 

@@ -22,6 +22,7 @@
 				<data android:scheme="https" />
 			</intent-filter>
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+			<meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true" />
         </activity>
     </application>
 </manifest>

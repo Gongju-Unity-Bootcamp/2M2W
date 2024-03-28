@@ -11,10 +11,13 @@ public enum SoundID
     BGM = 100,
     MainBGM = 101,
     TitleBGM = 102,
-    ArNavBGM = 103,
+    RoadBGM = 103,
     VFX = 1000,
     ButtonClick = 1001,
-    ButtonBack = 1002
+    ButtonBack = 1002,
+    Screenshot = 1003,
+    RecordStart = 1004,
+    RecordEnd = 1005
 }
 
 public class SoundData

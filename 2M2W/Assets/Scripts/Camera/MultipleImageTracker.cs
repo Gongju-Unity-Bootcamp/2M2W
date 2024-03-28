@@ -1,18 +1,19 @@
 using System.Collections.Generic;
+using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine;
 
 public class MultipleImageTracker : MonoBehaviour
 {
-    private ARTrackedImageManager trackedImageManager;
-
     public GameObject[] placeablePrefabs;
-    private Dictionary<string, GameObject> objDic;
+
+    private ARTrackedImageManager trackedImageManager;
+    private Dictionary<string, GameObject> objData;
 
     private void Awake()
     {
         trackedImageManager = gameObject.GetComponent<ARTrackedImageManager>();
-        objDic = new Dictionary<string, GameObject>();
+        objData = new Dictionary<string, GameObject>();
     }
 
     private void OnEnable()
@@ -26,7 +27,7 @@ public class MultipleImageTracker : MonoBehaviour
             newObject.name = obj.name;
             newObject.SetActive(false);
 
-            objDic.Add(newObject.name, newObject);
+            objData.Add(newObject.name, newObject);
         }
 
         trackedImageManager.trackedImagesChanged += OnTrackedImageChanged;
@@ -34,17 +35,9 @@ public class MultipleImageTracker : MonoBehaviour
 
     private void OnTrackedImageChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
-        foreach (ARTrackedImage trackedImage in eventArgs.added)
-        {
-            UpdateObject(trackedImage);
-        }
         foreach (ARTrackedImage trackedImage in eventArgs.updated)
         {
             UpdateObject(trackedImage);
-        }
-        foreach (ARTrackedImage trackedImage in eventArgs.removed)
-        {
-            objDic[trackedImage.name].SetActive(false);
         }
     }
 
@@ -52,15 +45,16 @@ public class MultipleImageTracker : MonoBehaviour
     {
         string referenceName = trackedImage.referenceImage.name;
 
-        if (referenceName == null)
+        if (trackedImage.trackingState == TrackingState.Tracking)
         {
-            return;
+            objData[referenceName].transform.position = trackedImage.transform.position;
+            objData[referenceName].transform.rotation = trackedImage.transform.rotation;
+            objData[referenceName].SetActive(true);
         }
-
-        objDic[referenceName].transform.position = trackedImage.transform.position;
-        objDic[referenceName].transform.rotation = trackedImage.transform.rotation;
-
-        objDic[referenceName].SetActive(true);
+        else
+        {
+            objData[referenceName].SetActive(false);
+        }
     }
 
     private void OnDisable()

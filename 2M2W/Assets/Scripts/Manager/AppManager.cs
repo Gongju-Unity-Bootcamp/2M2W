@@ -1,11 +1,12 @@
 using Microsoft.Geospatial;
 using Microsoft.Maps.Unity;
+using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.ARFoundation;
 using UnityEngine.Android;
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.XR.ARFoundation;
+using TMPro;
 
 public class AppManager : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public MapPin MapPin;
 
     [HideInInspector] public float polatedValue;
+    [HideInInspector] public int index;
     [HideInInspector] public bool navMode, mute, isPinch, isOpenPopup, updateLatLon;
 
     [HideInInspector] public GameObject Milestone;
@@ -110,10 +112,57 @@ public class AppManager : MonoBehaviour
         {
             return;
         }
+        else
+        {
+            TMP_Text text = Milestone.GetComponentInChildren<TMP_Text>();
+            int index = 0;
+
+            foreach (ItineraryItem itinerary in itineraryItems)
+            {
+                LatLon latLon = new LatLon(itinerary.maneuverPoint.coordinates[0], itinerary.maneuverPoint.coordinates[1]);
+
+                if (MapPin.Location.ApproximatelyEquals(latLon, 0.0004d))
+                {
+                    text.text = $"{index + 1}/{itineraryItems.Length}차 목적지\n방향 : {itinerary.instruction.text}\n거리 : {itinerary.travelDistance}\n예상 시간 : {itinerary.travelDuration}";
+                    break;
+                }
+
+                ++index;
+            }
+
+            if (index >= itineraryItems.Length)
+            {
+                text.text = $"1/{itineraryItems.Length}차 목적지\n방향 : {itineraryItems[0].instruction.text}\n거리 : {itineraryItems[0].travelDistance}\n예상 시간 : {itineraryItems[0].travelDuration}";
+            }
+        }
 
         if (false == isCooldown)
         {
+            TMP_Text text = Milestone.GetComponentInChildren<TMP_Text>();
+            int index = 0;
+
+            foreach (ItineraryItem itinerary in itineraryItems)
+            {
+                LatLon latLon = new LatLon(itinerary.maneuverPoint.coordinates[0], itinerary.maneuverPoint.coordinates[1]);
+
+                if (MapPin.Location.ApproximatelyEquals(latLon, 0.0004d))
+                {
+                    text.text = $"{index + 1}/{itineraryItems.Length}차 목적지\n방향 : {itinerary.instruction.text}\n거리 : {itinerary.travelDistance}\n예상 시간 : {itinerary.travelDuration}";
+                    break;
+                }
+
+                ++index;
+            }
+
+            if (index >= itineraryItems.Length)
+            {
+                text.text = $"1/{itineraryItems.Length}차 목적지\n방향 : {itineraryItems[0].instruction.text}\n거리 : {itineraryItems[0].travelDistance}\n예상 시간 : {itineraryItems[0].travelDuration}";
+            }
+
             isCooldown = true;
+        }
+        else
+        {
             currentTime += Time.deltaTime;
 
             if (currentTime > MapLocationService.perSeconds)

@@ -13,7 +13,6 @@ public class ArNavSubItem : UISubItem
     private enum Texts
     {
         Text_01,
-        Text_02
     }
 
     private enum Buttons
@@ -34,7 +33,6 @@ public class ArNavSubItem : UISubItem
         GetImage((int)Images.DocentImage).sprite = Managers.Resource.LoadSprite(data.Path);
 
         GetText((int)Texts.Text_01).text = data.Name;
-        GetText((int)Texts.Text_02).text = data.Desc;
 
         foreach (Buttons buttonIndex in Enum.GetValues(typeof(Buttons)))
         {
