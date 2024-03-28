@@ -5,19 +5,21 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.Android;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.XR.ARFoundation;
 
 public class AppManager : MonoBehaviour
 {
-    [HideInInspector] public XROrigin XROrigin;
-    [HideInInspector] public XRInteractionManager XRManager;
-    [HideInInspector] public CameraService CameraService;
-
     [HideInInspector] public MapSession MapSession;
     [HideInInspector] public MapRenderer MapRenderer;
     [HideInInspector] public MapInteractionController MapController;
     [HideInInspector] public MapLocationService MapLocationService;
     [HideInInspector] public MapPinLayer MapPinLayer, MapPinSubLayer, PopupPinLayer, MarkerPinLayer;
     [HideInInspector] public MapLineRenderer MapLineRenderer;
+
+    [HideInInspector] public XROrigin XROrigin;
+    [HideInInspector] public XRInteractionManager XRManager;
+    [HideInInspector] public ARSession ARSession;
+    [HideInInspector] public CameraService CameraService;
 
     [HideInInspector] public Camera MapCamera;
 
@@ -34,23 +36,25 @@ public class AppManager : MonoBehaviour
     [HideInInspector] public float polatedValue;
     [HideInInspector] public bool navMode, mute, isPinch, isOpenPopup, updateLatLon;
 
+    [HideInInspector] public GameObject Milestone;
     [HideInInspector] public PermissionCallbacks callbacks;
     private float currentTime;
     private bool isCooldown;
 
     public void Init() 
     {
-        GameObject subCamera = Managers.Resource.Instantiate("XROrigin");
-        XROrigin = subCamera.GetComponent<XROrigin>();
-        XRManager = Managers.Resource.Instantiate("XRManager").GetComponent<XRInteractionManager>();
-        CameraService = subCamera.GetComponent<CameraService>();
-        XROrigin.Camera.gameObject.SetActive(false);
-
         GameObject BingMap = Managers.Resource.Instantiate("BingMap");
         MapSession = BingMap.GetComponent<MapSession>();
         MapRenderer = BingMap.GetComponent<MapRenderer>();
         MapController = BingMap.GetComponent<MapInteractionController>();
         MapLocationService = BingMap.GetComponent<MapLocationService>();
+
+        GameObject subCamera = Managers.Resource.Instantiate("XROrigin");
+        XROrigin = subCamera.GetComponent<XROrigin>();
+        XRManager = Managers.Resource.Instantiate("XRManager").GetComponent<XRInteractionManager>();
+        ARSession = subCamera.GetComponentInChildren<ARSession>();
+        CameraService = subCamera.GetComponent<CameraService>();
+        XROrigin.Camera.gameObject.SetActive(false);
 
         MapPinLayer = BingMap.GetComponent<MapPinLayer>();
         MapPinSubLayer = BingMap.AddComponent<MapPinLayer>();
@@ -83,9 +87,8 @@ public class AppManager : MonoBehaviour
         else
         {
             Managers.UI.OpenPopup<MainPopup>();
-            XROrigin.Camera.gameObject.SetActive(true);
             Managers.Sound.Play(SoundID.MainBGM);
-
+            XROrigin.Camera.gameObject.SetActive(true);
             isOpenPopup = true;
         }
 
